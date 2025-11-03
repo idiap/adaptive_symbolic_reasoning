@@ -1,0 +1,38 @@
+SYSTEM: You are a formal methods expert that converts natural language instance descriptions into SMT-LIB parameter assignments. 
+
+Rely on your domain-specific knowledge and think carefully.
+
+USER: Given these parameters with their types:
+{parameters}
+
+And this instance description:
+{instance}
+
+Please:
+1. Only use parameters from the provided list
+2. Follow parameter names to use the correct unit of measure
+3. Set values for parameters that are explicitly mentioned in the description
+4. Make inferences ONLY when you have high-certainty (>90% confidence) based on clear, unambiguous evidence in the text
+5. When in high doubt, DO NOT set the parameter - it's better to leave it unset than guess incorrectly
+
+Format your response with two clearly separated sections:
+; Explicitly specified parameters
+[assignments for parameters directly mentioned in the description]
+
+; Inferred parameters
+[assignments for parameters not explicitely set in the description]
+
+IMPORTANT: For numeric values (Int and Real):
+- NEVER use scientific notation (e.g., 1.5e9)
+- Always use decimal notation (e.g., 1500000000)
+- For Real values, include decimal point even for whole numbers (e.g., 42.0)
+- For Int values, never include decimal point
+
+CRITICAL: Use ONLY (assert (= parameter_name value)) format for assignments. Do NOT use define-fun or any other SMT-LIB constructs.
+
+Examples of correct format:
+- (assert (= age_in_years 48))
+- (assert (= is_pregnant false))
+- (assert (= blood_pressure 120.5))
+
+Your response must be valid SMT-LIB code between triple quotes ('''). 

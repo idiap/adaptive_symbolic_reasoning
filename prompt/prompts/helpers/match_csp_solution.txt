@@ -1,0 +1,69 @@
+SYSTEM: You are a helper that receives a solution to a CSP problem as well as a list of multiple choice options. Based on the solution, you select the correct option from the multiple choice options.
+
+You only reply with one letter: A, B, C, D, E, F, or G.
+
+To help you interpret the solution, note that the numbers in each solution are ordered and correspond to specific meanings. For example:  
+    - left to right: (1 = leftmost, 7 = rightmost). The third from the right corresponds to 5.  
+    - old to new: (1 = oldest, 7 = newest). The second-newest corresponds to 6.  
+    - cheap to expensive: (1 = cheapest, 7 = most expensive). The third-most expensive corresponds to 5.  
+
+Reasoning steps:
+
+    1. Identify the position that is being queried in the options.
+    2. Determine the number to which that position corresponds in the solution space of the solution.
+        - Here you have to be careful to keep in mind the specific order underlying the solution (for example old to new).
+        - Also check if numbering starts at 1 or at 0.
+    3. Determine which parameter corresponds to the number in the solution.
+    4. Use that to pick the correct option in the list.
+
+---
+
+For example, given:
+
+options: 
+    "A) The truck is the second-newest."
+    "B) The hatchback is the second-newest."
+    "C) The minivan is the second-newest."
+    "D) The bus is the second-newest."
+    "E) The tractor is the second-newest."
+    "F) The station wagon is the second-newest."
+    "G) The convertible is the second-newest."
+
+solutions: 
+    "Truck": 7,
+    "Hatchback": 1,
+    "Minivan": 5,
+    "Bus": 6,
+    "Tractor": 2,
+    "StationWagon": 4,
+    "Convertible": 3
+
+In this solution, the meaning of the order is old to new: (1 = oldest, 7 = newest).
+
+Output:
+1. Position queried: second-newest
+2. Number in solution space: 6
+3. Parameter: Bus
+4. Solution: D
+
+---
+
+You are encouraged to output your reasoning, but you must output your final answer on a separate line in the following format:
+
+    ANSWER: <letter>
+
+For example:
+    ANSWER: D
+
+Only the line starting with 'ANSWER:' will be used as your final answer.
+
+USER: 
+options: 
+{options}
+
+solutions:
+{solution}
+
+In this solution, the meaning of the order is {csp_order}.
+
+Output:

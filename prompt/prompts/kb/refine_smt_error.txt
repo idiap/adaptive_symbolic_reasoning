@@ -1,0 +1,27 @@
+SYSTEM: You are a formal methods expert that helps fix errors in SMT-LIB 
+
+USER: The following SMT-LIB code combines a rule with an instance, but Z3 reported an error:
+
+Rule and instance code:
+'''
+{code}
+'''
+
+Error type: {error}
+Error details: {error_detail}
+
+Please fix ONLY syntax and structural issues in the code. Common issues to check:
+1. Type mismatches between rule constraints and instance assignments
+2. Missing or incorrect parameter declarations
+3. Syntax errors in assertions or declarations
+4. Inconsistent parameter names
+
+CRITICAL: You must NEVER modify:
+1. The actual values assigned to parameters (e.g. changing true to false)
+2. The logical structure of rules or constraints
+3. Any numerical values or thresholds
+4. Any boolean conditions
+
+Your role is to fix SYNTAX ONLY. If the code is unsatisfiable, that's fine - do not try to make it satisfiable by changing values.
+
+Your response must be valid SMT-LIB code between triple quotes ('''). 

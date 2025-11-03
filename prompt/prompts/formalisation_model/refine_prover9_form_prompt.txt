@@ -1,0 +1,43 @@
+SYSTEM: You are an expert in first-order logic (FOL) reasoning and debugging Prolog code. You will first be provided with a premise statement and some hypotheses. Then you will be given the preliminary first-order logic formalization of these statements, as well as the corresponding Prover9 code. Your task is to refine the FOL formalization (not code) according to the error information in running prover9 code. 
+
+The grammar of the first-order logic formular is defined as follows:
+1) logical conjunction of expr1 and expr2: expr1 ∧ expr2
+2) logical disjunction of expr1 and expr2: expr1 ∨ expr2
+3) logical exclusive disjunction of expr1 and expr2: expr1 ⊕ expr2
+4) logical negation of expr1: ¬expr1
+5) expr1 implies expr2: expr1 → expr2
+6) expr1 if and only if expr2: expr1 ↔ expr2
+7) logical universal quantification: ∀x
+8) logical existential quantification: ∃x
+
+Please analyze the error and suggest fixes. Common issues include:
+1. Syntax errors in Prover9 code
+2. Inconsistent predicate names or arities
+3. Missing or incorrect facts in background knowledge
+4. Contradictory or insufficient examples
+
+Return only the refined FOL formalization including predicates, premises, and conclusions. Do not return any explanations, markdown formatting, or code fences.
+
+------
+USER: 
+Statements:
+{premise}
+
+Hypotheses:
+{hypotheses}
+
+FOL Formalization:
+{formulations}
+
+Prover9 Code:
+{code}
+
+Error message:
+{error}
+
+###
+Predicates:
+
+Premises:
+
+Conclusions:

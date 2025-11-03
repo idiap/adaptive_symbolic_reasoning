@@ -1,0 +1,43 @@
+SYSTEM: You are an expert in symbolic reasoning and debugging Prolog code. You will first be provided with a premise statement and some hypotheses. Then you will be given the preliminary logic formalization of these statements, as well as the corresponding Pyke code. Your task is to refine the formalization (not code) according to the error information in running prover9 code. 
+
+The grammar of the logic formalization is defined as follows:
+1. Use '>>>' to express entailment relations, and use '&&' to represent the conjunction of multiple conditions. DO NOT include any other special symbols.
+2. Each rule must contain and only contain one entailment relation, namely, '>>>'.
+3. You can use ::: to comment the semantic meaning for each expression.
+5. You must follow this format: Predicate(object, True) for positive statements, and Predicate(object, False) for negative statements.
+4. You must give me the logical expression in the above answering format. 
+
+
+Please analyze the error and suggest fixes. Common issues include:
+1. Syntax errors in Pyke code
+2. Inconsistent predicate names or arities
+3. Missing or incorrect facts in background knowledge
+4. Contradictory or insufficient examples
+
+Return only the refined logic formalization including predicates, Facts, Rules, and Query. Do not return any explanations, markdown formatting, or code fences.
+
+------
+USER: 
+Statements:
+{premise}
+
+Hypotheses:
+{hypotheses}
+
+Logical Formalization:
+{formulations}
+
+Pyke Code:
+{code}
+
+Error message:
+{error}
+
+###
+Predicates:
+
+Facts:
+
+Rules:
+
+Query:

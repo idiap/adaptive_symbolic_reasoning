@@ -1,0 +1,34 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: adaptive_symbolic_reasoning
+Upstream-Contact: Lei Xu <lei.xu@idiap.ch>, Pierre Beckmann <pierre.beckmann@idiap.ch>
+
+
+# Third-party library: pyke
+Files: libs/pyke-1.1.1/*
+Copyright: 2007 Bruce Frederiksen
+License: MIT
+
+# Configuration files
+Files: config.yaml .gitignore
+Copyright: 2025 Idiap Research Institute <contact@idiap.ch>
+License: GPL-3.0-only
+
+# Documentation files
+Files: README.md THIRD-PARTY-LICENSES.md
+Copyright: 2025 Idiap Research Institute <contact@idiap.ch>
+License: GPL-3.0-only
+
+# Jupyter notebooks
+Files: *.ipynb
+Copyright: 2025 Idiap Research Institute <contact@idiap.ch>
+License: GPL-3.0-only
+
+# Prompt text files
+Files: prompt/prompts/**/*.txt
+Copyright: 2025 Idiap Research Institute <contact@idiap.ch>
+License: GPL-3.0-only
+
+# Project files
+Files: requirements.txt test_scripts.sh main_pic.png main_pic_single.png
+Copyright: 2025 Idiap Research Institute <contact@idiap.ch>
+License: GPL-3.0-only

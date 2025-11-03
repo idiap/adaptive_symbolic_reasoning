@@ -1,0 +1,88 @@
+SYSTEM: You are an expert in symbolic reasoning. 
+You will be provided with a premise statement and a hypothesis.
+Your task is to:
+(1) define all the predicates in the problem;
+(2) Based on these predicates, parse the premise statement into logic forms as 'Facts' and 'Rules'.
+(3) Parse the hypothesis into logic form as 'Query'. 
+USER: Here are some examples:
+###
+Premise statement:
+John has no keyboarding skills at all. If a person has no keyboarding skills at all, he/she will not be able to use a computer. And if a person is not able to use a computer, he/she will not be able to write essays using a word processing program. John has no keyboarding skills at all, so he cannot use a computer. Since John cannot use a computer, he cannot write essays using a word processing program. 
+
+Hypothesis:
+John cannot write essays using a word processing program.
+
+
+Answer:
+Predicates:
+keyboarding($x, bool) ::: Does x have keyboarding skills?
+computer($x, bool) ::: Is x able to use a computer?
+write($x, bool) ::: Is x able to write your essays using a word processing program?
+
+Facts:
+keyboarding(John, false) ::: John has no keyboarding skills at all.
+
+Rules:
+keyboarding($x, False) >>> computer($x, False) ::: If you have no keyboarding skills at all, you will not be able to use a computer.
+computer($x, False) >>> write($x, False) ::: If you are not able to use a computer, you will not be able to write your essays using a word processing program.
+keyboarding(John, False) >>> computer(John, False) ::: John has no keyboarding skills at all, so he cannot use a computer. 
+computer(John, False) >>> write(John, False) ::: Since John cannot use a computer, he cannot write essays using a word processing program.
+
+Query:
+write(John, False) ::: John cannot write essays using a word processing program.
+
+###
+Premise statement:
+It is rainy today. If it is raining, the grass will be wet. If the grass is wet, we can't have a meal on the grass. If we cannot have a meal on the grass, we cannot have a picnic today.
+
+Hypothesis:
+We can't have a picnic today.
+
+
+Answer:
+Predicates:
+rainy($x, bool) ::: Is it rainy at time x?
+wet($x, bool) ::: Is x wet?
+meal($x, bool) ::: Can x have a meal on the grass?
+picnic($x, bool) ::: Can x have a picnic?
+
+Facts:
+rainy(today, True) ::: It is rainy today.
+
+Rules:
+rainy(today, True) >>> wet(grass, True) ::: If it is raining, the grass will be wet.  
+wet(grass, True) >>> meal(we, False) ::: If the grass is wet, we can't have a meal on the grass.  
+meal(we, False) >>> picnic(we, False) ::: If we cannot have a meal on the grass, we cannot have a picnic today.
+
+Query:
+picnic(we, False) ::: We can't have a picnic today.
+
+
+<<<<<<<<<<<<<
+Keep in mind that:
+1. Use '>>>' to express entailment relations, and use '&&' to represent the conjunction of multiple conditions. DO NOT include any other special symbols.
+2. Each rule must contain and only contain one entailment relation, namely, '>>>'.
+3. You can use ::: to comment the semantic meaning for each expression.
+5. You must follow this format: Predicate(object, True) for positive statements, and Predicate(object, False) for negative statements.
+4. You must give me the logical expression in the above answering format. 
+
+
+Premise statement:
+{premise}
+
+
+Hypothesis:
+{conclusion}
+
+
+Answer:
+Predicates:
+
+
+Facts:
+
+
+Rules:
+
+
+Query:

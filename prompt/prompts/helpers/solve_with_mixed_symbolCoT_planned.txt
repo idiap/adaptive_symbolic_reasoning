@@ -1,0 +1,110 @@
+SYSTEM: You are given a logic reasoning problem and its logical formalization. 
+
+Based on the formalized problem representation, perform reasoning and provide your answer. Return your output in JSON format, using the key 'ans' to return the option you choose, and using the key 'reason' to return your reasoning process.
+
+Below are two examples to show you how to do it:
+------
+(Example of deductive reasoning problems)
+Statement:
+Miroslav Venhoda was a Czech choral conductor who specialized in the performance of Renaissance and Baroque music. Any choral conductor is a musician. Some musicians love music. Miroslav Venhoda published a book in 1946 called Method of Studying Gregorian Chant.
+
+Question:
+Based on the above information, is the following statement true, false, or uncertain? A Czech person wrote a book in 1946.
+A) True
+B) False
+C) Uncertain
+
+###
+Intermediate form:
+Predicates:
+Czech(x) ::: x is a Czech person.
+ChoralConductor(x) ::: x is a choral conductor.
+Musician(x) ::: x is a musician.
+Love(x, y) ::: x loves y.
+Author(x, y) ::: x is the author of y.
+Book(x) ::: x is a book.
+Publish(x, y) ::: x is published in year y.
+Specialize(x, y) ::: x specializes in y.
+Premises:
+Czech(miroslav) ∧ ChoralConductor(miroslav) ∧ Specialize(miroslav, renaissance) ∧ Specialize(miroslav, baroque) ::: Miroslav Venhoda was a Czech choral conductor who specialized in the performance of Renaissance and Baroque music.
+∀x (ChoralConductor(x) → Musician(x)) ::: Any choral conductor is a musician.
+∃x (Musician(x) ∧ Love(x, music)) ::: Some musicians love music.
+Book(methodOfStudyingGregorianChant) ∧ Author(miroslav, methodOfStudyingGregorianChant) ∧ Publish(methodOfStudyingGregorianChant, year1946) ::: Miroslav Venhoda published a book in 1946 called Method of Studying Gregorian Chant.
+Conclusions:
+∃y ∃x (Czech(x) ∧ Author(x, y) ∧ Book(y) ∧ Publish(y, year1946)) ::: A Czech person wrote a book in 1946.
+
+Output: {'ans': 'A', 'reason': ...}
+------
+(Example of constraints satisfaction problems)
+Statement:
+In an antique car show, there are three vehicles with different ages:
+- A tractor from 1960
+- A convertible from 1955
+- A minivan from 1965
+
+The show organizer wants to arrange them in chronological order (oldest to newest) for display.
+
+Question:
+Which of the following is true?
+A. The tractor is the first to be displayed.
+B. The convertible is the first to be displayed.
+C. The minivan is the first to be displayed.
+
+###
+Intermediate form:
+```
+include "globals.mzn";
+
+/* VEHICLES */
+enum VEHICLE = {Tractor, Convertible, Minivan};
+
+/* MANUFACTURE YEARS */
+array[VEHICLE] of int: vehicle_year = [1960, 1955, 1965];
+
+int: num_positions = 3;
+set of int: POSITION = 1..num_positions;
+
+/* Decision variable: vehicle positions (1 = first, 3 = last) */
+array[VEHICLE] of var POSITION: position;
+
+/* Each vehicle must have a unique position */
+constraint all_different(position);
+
+/* Older vehicles appear earlier (smaller position number) */
+constraint forall(v1, v2 in VEHICLE where vehicle_year[v1] < vehicle_year[v2]) (
+  position[v1] < position[v2]
+);
+
+solve satisfy;
+
+/* JSON Output */
+array[int] of VEHICLE: vehicle_list = [v | v in VEHICLE];  % convert to indexed array for position control
+
+output [
+  "{\n"
+] ++
+[
+  "  \"" ++ show(vehicle_list[i]) ++ "\": " ++ show(position[vehicle_list[i]]) ++
+  (if i < length(vehicle_list) then ",\n" else "\n" endif)
+  | i in 1..length(vehicle_list)
+] ++
+[
+  "}"
+];
+```
+
+Output: {'ans': 'B', 'reason': ...}
+------
+
+
+USER: 
+{hint}
+Problem: 
+{problem}
+
+###
+Intermediate form:
+{intermediate_form}
+
+
+Let's think step by step.

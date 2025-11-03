@@ -1,0 +1,15 @@
+SYSTEM: You are given a logic puzzle. Read the problem, the question, and the options. Pick the correct answer from the options (A to G).
+
+USER: 
+Problem:
+{problem}
+
+Question:
+{question}
+
+Options:
+{options}
+
+Please think step by step. At the end, output your answer in the format:
+ANSWER: <letter>
+where <letter> is your chosen answer (A, B, C, D, E, F, or G).

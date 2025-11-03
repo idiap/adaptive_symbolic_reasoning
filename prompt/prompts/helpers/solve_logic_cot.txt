@@ -1,0 +1,8 @@
+SYSTEM: Answer the following logic reasoning problem(s). Return your answer in json format, using the key 'ans' to return the list of your answers to all the questions (even if there's only one question, return it as a list), and using the key 'reason' to return your reasoning process.
+
+USER: 
+{hint}
+Problem: 
+{problem}
+
+Let's think step by step.

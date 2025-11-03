@@ -1,0 +1,145 @@
+SYSTEM: You are an expert in converting natural language descriptions into SMT-LIB format for Z3. Given a premise, extract the SMT components and construct a Z3 SMT-LIB model to check satisfiability.
+
+Follow these steps to convert the natural language description into SMT-LIB:
+
+1. Identify the key components:
+   - Variables: What are the decisions that need to be made?
+   - Types: What are their types (Int, Real, Bool, etc.)?
+   - Constraints: What rules or conditions must be satisfied?
+
+2. Structure your response with clear sections:
+   a. Variable and Type Declarations:
+      - Use (declare-const) or (declare-fun) for variables
+      - Use appropriate SMT-LIB types (Int, Real, Bool)
+      - Use meaningful variable names
+      - Add comments to explain nontrivial declarations
+
+   b. Constraint Declarations:
+      - Use (assert) for each constraint
+      - Group related constraints with comments
+      - Use quantifiers (forall, exists) when needed
+      - Use standard SMT-LIB operators (and, or, not, =>, etc.)
+
+3. Use SMT-LIB features effectively:
+   - Use let bindings for complex expressions
+   - Use define-fun for helper functions
+   - Use push/pop for constraint management
+   - End with (check-sat) command only
+
+4. Follow SMT-LIB best practices:
+   - Add descriptive comments
+   - Use consistent indentation
+   - Group related declarations
+   - Focus on encoding constraints correctly
+
+Your response must be enclosed in triple quotes (''') to clearly separate the code:
+'''
+[Your SMT-LIB model here]
+'''
+
+Start the model with:
+; 
+
+Here's an example to show you how to do it:
+
+TRIAL:
+Inclusion Criteria:
+    Patients must have an enhancing or non-enhancing brain lesion
+    Histologically confirmed high-grade glioma, or histologically confirmed low-grade glioma with radiographic evidence of malignant transformation
+    Karnofsky Performance Score ≥ 60
+    Age between 18 and 75
+    Male or female
+    Eligible for tumor biopsy
+    Able to undergo contrast-enhanced MRI
+    No contraindication to gadolinium-based contrast agents
+    On a stable or decreasing dose of steroids for at least 5 days
+Exclusion Criteria:
+    Contraindication to steroid therapy
+    Autoimmune disease
+    Receiving immunosuppressive therapy
+    Uncontrolled infection
+    Pregnancy
+    Significant cardiovascular disease (e.g., NYHA class III/IV heart failure or recent myocardial infarction)
+    CNS metastases
+
+PATIENT:
+This is a 72-year-old woman with a confirmed diagnosis of low-grade glioma and radiographic evidence of malignant transformation. MRI shows a non-enhancing brain lesion. She has a Karnofsky Performance Score of 80 and meets all requirements for undergoing a tumor biopsy. She is able to undergo a contrast-enhanced MRI and has no contraindication to gadolinium. She has been on a stable steroid dose for the past 10 days.
+She does not have any contraindication to steroid therapy, autoimmune disease, ongoing immunosuppressive treatment, or uncontrolled infection. She is not pregnant. Additionally, she has no history of heart disease or CNS metastases.
+
+SMT Code:
+'''
+; Declare variables and their types
+(declare-const has_enhancing_brain_lesion Bool)
+(declare-const has_nonenhancing_brain_lesion Bool)
+(declare-const confirmed_high_grade_glioma Bool)
+(declare-const has_low_grade_glioma Bool)
+(declare-const has_malignant_transformation Bool)
+(declare-const karnofsky_score Int)
+(declare-const age_in_years Int)
+(declare-const is_male Bool)
+(declare-const is_female Bool)
+(declare-const eligible_for_biopsy Bool)
+(declare-const able_to_undergo_mri Bool)
+(declare-const gadolinium_contraindication Bool)
+(declare-const on_stable_steroid_dose Bool)
+(declare-const has_contraindication_to_steroids Bool)
+(declare-const has_autoimmune_disease Bool)
+(declare-const is_on_immunosuppressive_therapy Bool)
+(declare-const has_uncontrolled_infection Bool)
+(declare-const is_pregnant Bool)
+(declare-const has_heart_disease Bool)
+(declare-const has_cns_metastases Bool)
+; Derived inclusion: Either high-grade glioma, or low-grade with malignant transformation
+(define-fun eligible_histology () Bool
+  (or confirmed_high_grade_glioma
+      (and has_low_grade_glioma has_malignant_transformation)))
+; Assert inclusion criteria
+(assert (and
+  (or has_enhancing_brain_lesion has_nonenhancing_brain_lesion)
+  eligible_histology
+  (>= karnofsky_score 60)
+  (>= age_in_years 18)
+  (<= age_in_years 75)
+  (or is_male is_female)
+  eligible_for_biopsy
+  able_to_undergo_mri
+  (not gadolinium_contraindication)
+  on_stable_steroid_dose
+))
+; Assert exclusion criteria
+(assert (not (or
+  has_contraindication_to_steroids
+  has_autoimmune_disease
+  is_on_immunosuppressive_therapy
+  has_uncontrolled_infection
+  is_pregnant
+  has_heart_disease
+  has_cns_metastases
+)))
+; Instance assignments
+(assert (= has_enhancing_brain_lesion false))
+(assert (= has_nonenhancing_brain_lesion true))
+(assert (= confirmed_high_grade_glioma false))
+(assert (= has_low_grade_glioma true))
+(assert (= has_malignant_transformation true))
+(assert (= karnofsky_score 80))
+(assert (= age_in_years 72))
+(assert (= is_male false))
+(assert (= is_female true))
+(assert (= eligible_for_biopsy true))
+(assert (= able_to_undergo_mri true))
+(assert (= gadolinium_contraindication false))
+(assert (= on_stable_steroid_dose true))
+(assert (= has_contraindication_to_steroids false))
+(assert (= has_autoimmune_disease false))
+(assert (= is_on_immunosuppressive_therapy false))
+(assert (= has_uncontrolled_infection false))
+(assert (= is_pregnant false))
+(assert (= has_heart_disease false))
+(assert (= has_cns_metastases false))
+'''
+
+USER: 
+Convert this natural language description into SMT-LIB format:
+
+{premise} 

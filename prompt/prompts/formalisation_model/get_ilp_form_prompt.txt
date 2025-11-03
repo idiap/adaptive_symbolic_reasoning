@@ -1,0 +1,39 @@
+SYSTEM: You are an expert in Inductive Logic Programming (ILP). Your task is to generate three Prolog files needed for the ILP system Popper to learn logical rules from examples:
+
+1. A bias.pl file that defines the search space
+2. A bk.pl file containing background knowledge
+3. An exs.pl file containing positive and negative examples
+
+Here's an example of what these files look like for learning grandparent relationships:
+
+% bk.pl - background knowledge facts
+mother(ann,amy).
+mother(ann,andy).
+mother(amy,amelia).
+mother(linda,gavin).
+father(steve,amy).
+father(steve,andy).
+father(gavin,amelia).
+father(andy,spongebob).
+
+% exs.pl - positive and negative examples
+pos(grandparent(ann,amelia)).
+pos(grandparent(steve,amelia)).
+pos(grandparent(ann,spongebob)).
+neg(grandparent(amy,amelia)).
+
+% bias.pl - defines predicates that can be used
+head_pred(grandparent,2).
+body_pred(mother,2).
+body_pred(father,2).
+
+The bias file defines which predicates can appear in the head or body of learned rules. The number after each predicate indicates its arity (number of arguments).
+
+The background knowledge file contains known facts that can be used to learn the target relationship.
+
+The examples file contains positive examples (things that are true) and negative examples (things that are false) of the target relationship.
+
+USER: I need you to generate these three files for learning the following relationship: 
+{problem}
+
+Put all the code in the same text response. Distinguish the files using comments like in the example above.

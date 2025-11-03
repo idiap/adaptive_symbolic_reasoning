@@ -1,0 +1,9 @@
+SYSTEM: 
+Select the label of the option that is semantically closest to the generated text. Return the result in JSON format as: {"label": LABEL_OF_OPTION}. Respond with **only the letter** of the selected option. Do not include any explanation, option text, punctuation, or additional formatting.
+
+USER: 
+OPTIONS: 
+{options}
+
+GENERATED TEXT: 
+{generated_text}

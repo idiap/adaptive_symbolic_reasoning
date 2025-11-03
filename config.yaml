@@ -1,0 +1,55 @@
+cache_dir:
+  result_dir: 'results'
+  pyke_cache: 'temp/formalisation_pyke'
+  prover9_cache: 'temp/formalisation_prover9'
+  delor_cache: 'temp/formalisation_delor'
+
+
+api_config:
+  # OpenAI Compatible APIs (Third-party APIs using OpenAI interface)
+  deepseek-v3:
+    model_name: "deepseek-chat"
+    api_key: "YOUR_DEEPSEEK_API_KEY"
+    base_url: "https://api.deepseek.com"
+
+  # Azure OpenAI
+  gpt-4o-azure:
+    model_name: "YOUR_AZURE_MODEL_NAME"
+    azure_endpoint: "YOUR_AZURE_ENDPOINT"
+    openai_api_version: "YOUR_API_VERSION"
+    api_key: "YOUR_AZURE_API_KEY"
+
+  gemini:
+    api_key: "YOUR_GEMINI_API_KEY"
+
+  qwen2.5-7b:
+    model_name: "PATH_TO_YOUR_QWEN/Qwen2.5-7B-Instruct"
+    api_key: "YOUR_HUGGINGFACE_API_KEY"
+
+  llama-3.1-8b:
+    model_name: "PATH_TO_YOUR_LLAMA/Llama-3.1-8B-Instruct"
+    api_key: "YOUR_HUGGINGFACE_API_KEY"
+
+  qwen2.5-coder-7b:
+    model_name: "PATH_TO_YOUR_QWEN/Qwen2.5-Coder-7B-Instruct"
+    api_key: "YOUR_HUGGINGFACE_API_KEY"
+
+agent_config:
+  minizinc_path: "PATH_TO_YOUR_MINIZINC"
+
+data_dir:
+  pronto_qa_ori: "data/ProntoQA/dev.json"
+  proof_writer_ori: "data/ProofWriter/dev.json"
+  folio_ori: "data/FOLIO/dev.json" 
+  logical_deduction_ori: "data/LogicalDeduction/dev.json"  
+  trec_ori: "data/TREC/trec_patient_trial_testset.json"
+  pronto_qa: "data/mixed/sep_pronto_qa.json"
+  proof_writer: "data/mixed/sep_proof_writer.json"
+  folio: "data/mixed/sep_folio.json" 
+  logical_deduction: "data/mixed/sep_logical_deduction.json"  
+  trec: "data/mixed/sep_trec.json"
+  mixed: "data/mixed/mixed_data.json"
+  concat: "data/concat/concat.json"
+
+
+

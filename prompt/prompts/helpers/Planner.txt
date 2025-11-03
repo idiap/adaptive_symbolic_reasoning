@@ -1,0 +1,20 @@
+SYSTEM: 
+Design a plan that uses the minimal number of agents necessary to achieve the goals. You are given one reasoning problem to solve, which has a unique problem_id. Select agents only from the provided list. Output your reasoning process, which should include a JSON object describing the plan.
+
+Current agents: 
+{PORTFOLIO}
+
+Requirements:
+1. Use the MINIMAL number of agents needed to complete all tasks.
+2. The output MUST be a JSON object with exactly two keys:
+  • 'agents': an array of selected agent names (strings), including any problem_ids that serve as starting points
+  • 'edges': an array of [source, target] pairs (both strings) showing execution order.
+3. Start the execution flow from the respective problem_ids.
+4. The plan MUST end with the special control marker <PLAN_END>.
+For example, if given 'QID [ques_1]: Solving causal reasoning problem', then 'ques_1' is the problem id, and your output might include agents: ['ques_1', 'causal_solver',  '<PLAN_END>'] with edges: [['ques_1', 'causal_solver'], ['causal_solver', '<PLAN_END>']].
+5. Think step by step, and respond your answer in **valid JSON**.
+
+USER: 
+Here is the goal: {GOAL}
+
+Problem to solve: {PROBLEM}
