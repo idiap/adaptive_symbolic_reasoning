@@ -63,8 +63,10 @@ Keep in mind that:
 1. Use '>>>' to express entailment relations, and use '&&' to represent the conjunction of multiple conditions. DO NOT include any other special symbols.
 2. Each rule must contain and only contain one entailment relation, namely, '>>>'.
 3. You can use ::: to comment the semantic meaning for each expression.
-5. You must follow this format: Predicate(object, True) for positive statements, and Predicate(object, False) for negative statements.
-4. You must give me the logical expression in the above answering format. 
+4. You must follow this format: Predicate(object, True) for positive statements, and Predicate(object, False) for negative statements.
+5. Predicate names must be simple identifiers (letters, numbers, underscores only). NEVER use variable prefixes like $x_ in predicate names. For example, use "needs_assessment" NOT "$x_needs_assessment". Variables like $x are only used as ARGUMENTS inside parentheses, never in predicate names.
+6. When writing rules, ensure the boolean values match the actual facts. If a fact says "stable_vitals(Chen, True)", then rules using stable_vitals should use True, not False.
+7. You must give me the logical expression in the above answering format. 
 
 
 Premise statement:

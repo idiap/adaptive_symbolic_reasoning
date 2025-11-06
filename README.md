@@ -11,8 +11,8 @@
 ## Demonstrations
 
 We provide two demonstrations to show the applicability of our framework in both single-question and sequential testing scenarios:
-- Single-question testing: [link](./demo_single_question.ipynb)
-- Sequential testing: [link](./demo_sequential_question.ipynb)
+- Paper Assignment Task: [link](./demo_paper_assignment.ipynb)
+- Multi-task Reasoning: [link](./demo_hospital_admin.ipynb)
 
 ## 🛠️ System Requirements
 
@@ -46,17 +46,6 @@ Z3 is automatically installed via pip requirements. Ensure system compatibility 
 1. Download MiniZinc from the official website
 2. Install following the platform-specific instructions
 3. Configure the MiniZinc path in `config.yaml` under `agent_config_dsw.minizinc_path`
-
-## 📒 Data Preparation
-The data we use comes from external benchmarks. You just do some post-processing to make it work with your system.
-
-Specifically, you can obtain the data we use through the following steps:
-
-1. Download the `FOLIO`, `LogicalDeduction`, `ProntoQA`, and `ProofWriter` datasets from https://github.com/teacherpeterpan/Logic-LLM/tree/main/data, and place them in folders under `./data`.
-2. Download the `TREC` data from https://trec.nist.gov/data/trials/qrels2021.txt and https://trec.nist.gov/data/trials/topics2021.xml respectively, and place them in `./data/TREC`.
-3. Run `python -m create_trec_dataset` to process the TREC data.
-4. Run `python -m create_mixing_data` to create the mixed data.
-5. Run `python -m create_sequential_dataset` to create the sequential dataset.
 
 ## ⚙️ Configuration Setup
 

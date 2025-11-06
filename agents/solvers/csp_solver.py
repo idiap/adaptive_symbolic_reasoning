@@ -23,53 +23,11 @@ log = setup_logging()
 class CSPSolver(AbstractSolver):
     def __init__(self, name: str, goal: str, generator: Any, prompt_dict: Dict = None, predecessors: List[str] = None, problem_to_solve: List[str] = None):
         super().__init__(name, goal, generator, prompt_dict, predecessors, problem_to_solve)
-        # self.solver_path = "/Applications/MiniZincIDE.app/Contents/Resources/minizinc"
         if isinstance(generator, LocalGenerator):
             self.local_flag = True
         else:
             self.local_flag = False
         self.solver_path = 'minizinc'
-        self.ordering_str = ''
-    
-    def _extract_answer(self, model_output):
-        """
-        Extracts the answer letter from a line like 'ANSWER: D' or '$\\boxed{D}$' in the model output.
-        Returns the letter as a string, or None if not found.
-        """
-        # Try the expected ANSWER: format first
-        match = re.search(r'ANSWER:\s*([A-G])', model_output, re.IGNORECASE)
-        if match:
-            return match.group(1).upper()
-        
-        # Try LaTeX boxed format that Gemini seems to be using
-        match = re.search(r'\\boxed\{([A-G])\}', model_output)
-        if match:
-            return match.group(1).upper()
-        
-        # Try just the letter in boxed format without LaTeX
-        match = re.search(r'boxed\{([A-G])\}', model_output)
-        if match:
-            return match.group(1).upper()
-        
-        return None
-
-    def _get_final_result(self, memory, **model_args):
-        csp_order = memory.read(f"csp_order_{self.name}")
-        solutions = memory.read(f"solutions_{self.name}")   
-        # Read options from first predecessor if available
-        first_pred = self.predecessors[0]
-        options = memory.read(f"options_{first_pred}") or None
-        model_output = self.llm.generate(
-            model_prompt_dir="helpers",
-            prompt_name="match_csp_solution.txt",
-            model_args = model_args,
-            solution=solutions[0]['assignments'],
-            options=options,
-            csp_order=csp_order
-        )
-        parsed_answer = self._extract_answer(model_output) 
-
-        return parsed_answer
 
     def __call__(self, memory: Scratchpad, **model_args) -> Dict[str, Any]:
         try:
@@ -82,10 +40,10 @@ class CSPSolver(AbstractSolver):
             
             if not data['problem']:
                 raise ValueError("Problem description is empty")
-
+            
             # First formalize the problem
-            order, code = self._formalize(data['problem'], **model_args)    
-            memory.write(f"csp_order_{self.name}", order) 
+            code = self._formalize(data['problem'], **model_args)
+            memory.write(f"minizinc_code_{self.name}", code)  # Store code even if solving fails
                    
             # Then try to solve it
             for attempt in range(self.max_attempts):
@@ -95,11 +53,9 @@ class CSPSolver(AbstractSolver):
                 
                 if success:
                     log.info("MiniZinc ran successfully. Found %d solutions", len(solutions) if solutions else 0)
-                    solver_label = self._get_final_result(memory)
                     if solutions:
                         result = {
-                            'ori_answer': solutions,
-                            'parsed_answer': solver_label,
+                            'solutions': solutions,
                             'assignments': solutions[0]['assignments'],
                             'minizinc_code': code
                         }
@@ -144,13 +100,12 @@ class CSPSolver(AbstractSolver):
         if not response:
             raise ValueError("LLM returned empty response")
         
-        order, code = self._extract_code_from_response(response)
+        code = self._extract_code_from_response(response)
         
         if not code and not output_anyway:
             raise ValueError("No MiniZinc code found in LLM response")
-        
 
-        return order, code
+        return code
 
     def _fix_syntax_error(self, code: str, error_msg: str, **model_args) -> str:
         if 'response_format' in model_args:
@@ -169,26 +124,25 @@ class CSPSolver(AbstractSolver):
         return self._extract_code_from_response(refined)
 
     def _extract_code_from_response(self, response: str) -> str:
+        """Extract MiniZinc code from LLM response."""
         if not response:
             return ""
-
-        pattern = r'<mean>(.*?)</mean>'
-        try:
-            self.ordering_str = re.findall(pattern, response)[0]
-        except:
-            pass
             
+        # Try to extract code from triple quotes
         code_blocks = response.split("'''")
         if len(code_blocks) >= 3:
-            return self.ordering_str, code_blocks[1].strip()
+            return code_blocks[1].strip()
             
+        # Try if response starts with "minizinc"
         if response.lower().startswith("minizinc"):
-            return self.ordering_str, response[len("minizinc"):].strip()
+            return response[len("minizinc"):].strip()
             
+        # Try to find code starting with a comment
         if "% minizinc" in response.lower():
-            return self.ordering_str, response[response.lower().find("% minizinc"):].strip()
+            return response[response.lower().find("% minizinc"):].strip()
             
-        return self.ordering_str, response.strip()
+        # Otherwise return the whole response
+        return response.strip()
 
     def _run_solver(self, code: str) -> Tuple[bool, str, List[Dict[str, Any]]]:
         try:

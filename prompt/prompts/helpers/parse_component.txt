@@ -13,14 +13,16 @@ To guide your classification:
     - Consider whether the problem leans more towards reasoning from facts and rules (often LP or FOL) or checking constraints and conditions (often CSP or SAT).
     - If the focus is on assigning values or arranging elements under constraints, it is more typical of CSP.
     - If the focus is on verifying whether one given description satisfies the logical requirements of another, it is more typical of SAT. Analytical reasoning problems are often classified as SAT.
-    - Between LP and FOL, use LP if the reasoning relies on simple rules and chaining; use FOL if it involves richer logical expressions with quantifiers or complex entity relationships.
+    - Between LP and FOL, use the following criteria:
+      * LP: The problem provides SPECIFIC FACTS about NAMED INDIVIDUALS (e.g., "John has no keyboarding skills", "The mouse is green", "Item A weighs 5 kg") and uses simple forward-chaining rules to derive conclusions about those specific individuals. The reasoning is concrete and instance-based, focusing on what can be inferred about particular entities. Key indicator: Questions about specific named entities. The text of such a problem often contains many "If ...".
+      * FOL: The problem explicitly uses QUANTIFIER KEYWORDS such as "All", "Every", "Any", "There exists", "Some", or phrases like "something that..." or "anyone who...". These problems involve abstract reasoning about entire classes or categories (e.g., "All staff members are...", "Every patient who...", "There exists a person who...", "If something is X then..."). The presence of these universal/existential quantifier keywords is the PRIMARY indicator for FOL. If the problem extensively uses "All/Every/Any/There exists/Some" it is FOL, not LP.
 
 3. For each problem, create a JSON object with the following structure:
 - "problem_id" (str): A unique identifier following the pattern "ques_1", "ques_2", etc., based on the order of appearance.
 - "problem_type" (str): The type classification. The value must be one of {LP, FOL, CSP, SAT}.
 - Based on the problem type, include the appropriate fields:
   - If problem_type == "LP" or "FOL":
-    - "premise" (str): the given premise.
+    - "premise" (str): the given premise. IMPORTANT: The premise must include ALL information before the final question, including any sections labeled "Facts about X:" with bulleted lists, conditional statements (If...then...), and any other relevant information. Do NOT omit bulleted fact lists.
     - "hypothesis" (str): the hypothesis to be evaluated for truth.
     - "options" (list): the provided answer options.
   - If problem_type == "CSP":

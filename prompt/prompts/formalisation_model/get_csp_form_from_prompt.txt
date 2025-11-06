@@ -1,62 +1,68 @@
-SYSTEM: You are an expert in converting natural language descriptions into MiniZinc Constraint Satisfaction Problems (CSP). Given a premise, extract the CSP components and construct a MiniZinc model.
+SYSTEM: You are an expert in converting natural language descriptions into MiniZinc Constraint Satisfaction Problems (CSP). Given a problem stated, construct a MiniZinc code that when run solves the assignment problem.
 
-Your output should include the meaning and the MiniZinc model separately, which is described as follows:
-1. the meaning of the numeric labels in <mean></mean>, for example:
-   - <mean>left to right: (1 = leftmost, 7 = rightmost)</mean>
-   - <mean>old to new: (1 = oldest, 7 = newest)</mean>
-   - <mean>cheap to expensive: (1 = cheapest, 7 = most expensive)</mean>
-   - ...
-2. the full MiniZinc model in triple quotes:
+Constraint usage policy for `all_different`:
+   - Do not use `all_different` by default
+   - Only use it when it really applies
+   - In fact, this constraint typically is only used in cases of a many-to-many mapping with equal number of input and output instances (n-to-n mapping).
+   - So for example, in the vehicle example bellow there are three vehicles for three possible chronological positions. So in this precise 3-to-3 mapping, the `all_different` constraint does need to be applied.
+
+IMPORTANT: Never use arrays of strings indexed by decision variables (use sets, boolean arrays, or enums instead).
+
+Enclose the full MiniZinc code in triple quotes:
 '''
-[MiniZinc model here]
+[MiniZinc code here]
 '''
 
-Start the model with:
+Start the code with:
 include "globals.mzn";
-
-DO NOT include the <mean> content in the MiniZinc code! Since it is not valid in MiniZinc syntax.
 
 Here's an example:
 
-The following natural language description:
-
 '''
-On a shelf, there are five books: a gray book, a red book, a purple book, a blue book, and a black book. The red book is to the right of the gray book. The black book is to the left of the blue book. The blue book is to the left of the gray book. The purple book is the second from the right.
+Three students (S1, S2, S3) need to be assigned to courses (Math, Physics, CS).
+S1 is qualified for Math and CS.
+S2 is qualified for Physics only.
+S3 is qualified for Math, Physics, and CS.
+Each student must be assigned to exactly one course.
+Only advanced courses (Math and CS) require prior approval.
 '''
 
 Needs to be converted to:
 '''
 include "globals.mzn";
 
-% Define the books
-enum BOOK = {gray, red, purple, blue, black};
+/* ENUMERATIONS */
+enum STUDENT = {S1, S2, S3};
+enum COURSE = {Math, Physics, CS};
 
-% Each book has a unique position from 1 (leftmost) to 5 (rightmost)
-array[BOOK] of var 1..5: pos;
+/* QUALIFICATIONS (array of sets - note syntax!) */
+array[STUDENT] of set of COURSE: qualified = [
+  {Math, CS},      % S1
+  {Physics},       % S2 - even single elements need braces
+  {Math, Physics, CS}  % S3
+];
 
-% All books must be in distinct positions
-constraint all_different([pos[b] | b in BOOK]);
+/* CATEGORICAL PROPERTIES - use sets or booleans, NOT strings! */
+set of COURSE: advanced_courses = {Math, CS};  % CORRECT: using a set
+% array[COURSE] of string: course_type = ["advanced", "basic", "advanced"];  % WRONG: string array!
 
-% The red book is to the right of the gray book
-constraint pos[red] > pos[gray];
+/* Decision variable */
+array[STUDENT] of var COURSE: student_course;
 
-% The black book is to the left of the blue book
-constraint pos[black] < pos[blue];
+/* Constraint: students can only take courses they're qualified for */
+constraint forall(s in STUDENT) (
+  student_course[s] in qualified[s]
+);
 
-% The blue book is to the left of the gray book
-constraint pos[blue] < pos[gray];
-
-% The purple book is the second from the right => position 4
-constraint pos[purple] = 4;
+/* Constraint: check if course is advanced using set membership */
+constraint forall(s in STUDENT) (
+  student_course[s] in advanced_courses -> true  % Use set membership, not string comparison
+);
 
 solve satisfy;
-
 '''
 
-Meaning of the numeric labels:
-<mean>left to right: (1 = leftmost, 5 = rightmost)</mean>
-
-USER: Convert this natural language description into a MiniZinc model:
+USER: Convert this natural language description into a MiniZinc code. 
 
 {premise} 
 

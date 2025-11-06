@@ -235,14 +235,15 @@ class Planner(BaseAgent):
                 memory.write(f"context_{problem_id}", context)
                 memory.write(f"question_{problem_id}", question)
                 memory.write(f"options_{problem_id}", "\n".join(options))
-                memory.write(f"csp_input_{problem_id}", {"problem": context})
+                # Use FULL original problem text for CSP solver, not just parsed context
+                memory.write(f"csp_input_{problem_id}", {"problem": data['problem']})
                 memory.write(f"description_{problem_id}", description)
                 
                 # Store in record for backward compatibility
                 problem_record['context'] = context
                 problem_record['question'] = question
                 problem_record['options'] = "\n".join(options)
-                problem_record['csp_input'] = {"problem": context}
+                problem_record['csp_input'] = {"problem": data['problem']}
                 
             elif problem_type.lower() == 'sat':
                 description = f"For a Boolean Satisfiability (SAT) problem, verify whether all logical conditions in a system are satisfied by a given configuration." 

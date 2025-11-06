@@ -66,8 +66,6 @@ class FOLSolver(AbstractSolver):
                 **model_args
             )
 
-            memory.write(f"intermediate_form_{self.name}", intermediate_form)
-
             # Then try to solve it
             for attempt in range(self.max_attempts):
                 history_critique_output.append(intermediate_form)

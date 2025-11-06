@@ -19,12 +19,9 @@ log = setup_logging()
 
 import os
 import yaml
-
-import os
 import subprocess
 
-
-
+# Load config once at module level and make it accessible
 with open('config.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
@@ -43,8 +40,8 @@ def register_agent(portfolio: Portfolio, agent: BaseAgent, name: str, goal: str,
     portfolio[name] = {
         'goal': goal,
         'agent': agent,
-        'prompt_dict':prompt_dict
-        }
+        'prompt_dict': prompt_dict
+    }
     log.info("Registered agent '%s'", name)
 
 

@@ -180,6 +180,8 @@ class LPSolver(AbstractSolver):
 
     def _parse_forward_rule(self, rule):
         statements = rule.split('>>>')
+        pyke_rule = None  # Initialize to handle empty rules
+        
         for idx in range(len(statements)-1):
             premise, conclusion = statements[idx], statements[idx+1]
             self.f_index += 1
@@ -200,6 +202,11 @@ class LPSolver(AbstractSolver):
             pyke_rule += f'''\n\tassert'''
             for c in conclusion_list:
                 pyke_rule += f'''\n\t\tfacts.{c}'''
+        
+        if pyke_rule is None:
+            log.warning("Malformed rule (no >>> separator): %s", rule)
+            return ""  # Return empty string for malformed rules
+        
         return pyke_rule
     
     def _create_fact_file(self, facts):
