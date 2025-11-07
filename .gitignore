@@ -22,6 +22,9 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+demo.html
+libs/Prover9/
+config_full.yaml
 
 # Virtual environments
 venv/

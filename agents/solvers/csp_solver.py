@@ -196,20 +196,27 @@ class CSPSolver(AbstractSolver):
             if match:
                 variable_name = match.group(1)
                 assignments_str = match.group(2)
-                # Split by comma, then by colon
-                assignments = {}
-                for item in assignments_str.split(','):
-                    item = item.strip()
-                    if not item:
-                        continue
-                    if ':' in item:
+                raw_items = [item.strip() for item in assignments_str.split(',') if item.strip()]
+                assignments: Dict[str, Any] = {}
+                # Detect whether MiniZinc printed explicit indices ("1: value")
+                has_named_items = any(':' in item for item in raw_items)
+
+                if has_named_items:
+                    for item in raw_items:
+                        if ':' not in item:
+                            continue
                         key, value = item.split(':', 1)
                         key = key.strip()
                         value = value.strip()
-                        # Try to convert to int, otherwise keep as string
                         try:
                             assignments[key] = int(value)
                         except ValueError:
                             assignments[key] = value
+                else:
+                    # MiniZinc often emits vectors like [Poster_1, OM_A, ...].
+                    # Preserve ordering so downstream components can align
+                    # with domain objects (e.g., papers P1..Pn).
+                    assignments = {str(idx + 1): value for idx, value in enumerate(raw_items)}
+
                 solutions.append({'assignments': {variable_name: assignments}})
         return solutions

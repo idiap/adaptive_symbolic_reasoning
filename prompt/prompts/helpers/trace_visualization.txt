@@ -1,0 +1,64 @@
+SYSTEM: 
+You are creating HTML visualization sections for a symbolic reasoning solver trace.
+
+Your goal: Generate clean, problem-specific HTML sections that visualize the solver's reasoning process. The HTML will be embedded into a larger document that already has the problem description and execution DAG.
+
+Key principles:
+1. **Show the formal code** - This provides the epistemic guarantee
+2. **Visualize problem-specific details** - Adapt to CSP/LP/FOL/SMT
+3. **Verify the solution** - Show that constraints/rules were satisfied
+4. **Separate formal from interpretation** - Use callouts for LLM explanations
+
+Output format: HTML sections only (no full document, no markdown wrappers)
+
+USER: 
+## Context
+{narrative_context}
+
+{style_hint}
+
+{extra_guidance}
+
+## Available Data
+{context}
+
+---
+
+Generate HTML sections for:
+
+1. **Result Summary** - Final answer with status pills/badges
+2. **Problem-Specific Visualization** - Adapt based on problem type:
+   - CSP: Constraint verification table, assignment cards by session
+   - LP: Derivation chain (facts → rules → conclusions)
+   - FOL: Proof steps with logical notation
+   - SMT: Assertions and model/satisfiability result
+3. **Generated Code** - Complete formal code in `<pre>` blocks
+4. **Verification** - Show how solution satisfies all constraints/rules
+5. **Interpretation** (optional) - Natural language explanation in `.callout` box
+
+Use these CSS classes (already defined):
+- Cards: `.card`, `.card h2`, `.card h3`
+- Status: `.pill.ok` (green), `.pill.no` (red), `.pill.warn` (yellow)
+- Chips: `.chip` with `.k` and `.v` inside
+- Tables: auto-styled `<table>`, `<th>`, `<td>`
+- Code: `<pre>` with syntax highlighting
+- Callout: `.callout` (for interpretations - use dashed border)
+- Utilities: `.mono`, `.small`
+
+**IMPORTANT - Layout rule:**
+ALL your cards MUST use `style="grid-column:span 12"` (full width).
+Do NOT use other span values. Each section should contain ONE card spanning the full width.
+
+Template to follow:
+```html
+<section class="grid" style="margin-top:8px">
+  <div class="card" style="grid-column:span 12">
+    <h2>Your Section Title</h2>
+    <!-- Your content here -->
+  </div>
+</section>
+```
+
+You can create multiple sections, but each section should have ONE full-width card.
+
+Output ONLY the HTML sections (starting with `<section class="grid"...` and ending with `</section>`). No explanations, no markdown.

@@ -1,0 +1,52 @@
+# Trace to HTML Prompt (Compact Version)
+
+Transform this symbolic reasoning trace into a clean, professional HTML visualization page.
+
+## Input
+Problem description and solver trace with generated code and results.
+
+## Requirements
+
+1. **Create self-contained HTML** with embedded CSS (dark theme, Inter font)
+2. **Show prominently**:
+   - Problem description (natural language)
+   - Generated formal code (Prover9/Pyke/MiniZinc/Z3)
+   - Final answer/result with status indicator
+   - Reasoning steps or derivation process
+   - Verification that constraints are satisfied
+
+3. **Design style**:
+   - Dark background (#0b1220), card panels (#111a2b)
+   - Accent colors: cyan (#7cc4ff), purple (#b892ff)
+   - Clean typography with clear hierarchy
+   - Responsive grid layout
+   - Code in monospace with syntax highlighting
+
+4. **Critical rules**:
+   - ✓ Extract ALL information from the trace accurately
+   - ✓ Display complete formal code (this provides the formal guarantee)
+   - ✓ Use visual aids: pills for status, chips for metadata, tables for data
+   - ✗ Never invent information not in the trace
+   - ✗ When adding interpretations/diagrams, clearly label them as such
+
+5. **Structure**:
+   ```
+   Header (title + solver info)
+   → Result Summary (answer, status, metrics)
+   → Problem Description (natural language)
+   → Generated Code (formal syntax)
+   → Reasoning Process (steps/derivation/proof)
+   → Verification (show constraints satisfied)
+   → Footer
+   ```
+
+6. **For different problem types**:
+   - **CSP**: Show constraints, variable assignments, capacity usage
+   - **FOL**: Show axioms, proof steps, logical notation (∀, ⇒, ∧)
+   - **LP**: Show facts→rules→derived predicates chain
+   - **SMT**: Show assertions, SAT/UNSAT result, model if SAT
+
+## Key Principle
+**The formal code execution provides epistemic trust. Your visualization should make this transparent and understandable, not replace it with interpretations.**
+
+Output complete, valid HTML that can be saved and opened in any browser.
