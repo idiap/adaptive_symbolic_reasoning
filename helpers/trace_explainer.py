@@ -14,7 +14,7 @@ import re
 from collections import defaultdict
 from html import escape
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Sequence
 
 from agents.meta_agents.planner import Plan
 from base.helper import TracePersister
@@ -56,6 +56,44 @@ def snapshot_memory(memory) -> Dict[str, Any]:
         val, _expiry = value if isinstance(value, (tuple, list)) and len(value) == 2 else (value, None)
         snapshot[key] = _stringify(val)
     return snapshot
+
+
+def prepare_why_inputs(
+    problem_ids: Sequence[str],
+    memory,
+    *,
+    scenario: str,
+    summary_fields: Sequence[str],
+    metadata_overrides: Optional[Dict[str, Any]] = None,
+) -> tuple[list[Dict[str, Any]], Dict[str, Any]]:
+    """Create ``result_summary`` and metadata dictionaries for ``why``.
+
+    Args:
+        problem_ids: Iterable of problem identifiers.
+        memory: Scratchpad instance containing ``result_{pid}`` entries.
+        scenario: Human-readable scenario name.
+        summary_fields: Keys to copy from each ``result_{pid}``.
+        metadata_overrides: Additional metadata entries to merge.
+
+    Returns:
+        Tuple ``(result_summary, metadata)`` ready to pass to ``why``.
+    """
+    result_summary: List[Dict[str, Any]] = []
+    for pid in problem_ids:
+        record = memory.read(f"result_{pid}") or {}
+        summary = {"problem_id": pid}
+        for field in summary_fields:
+            summary[field] = record.get(field)
+        result_summary.append(summary)
+
+    metadata = {
+        "scenario": scenario,
+        "problem_ids": list(problem_ids),
+    }
+    if metadata_overrides:
+        metadata.update(metadata_overrides)
+
+    return result_summary, metadata
 
 
 MAX_EVENTS_PER_PROBLEM = 12
@@ -868,22 +906,80 @@ def why(
     metadata: Optional[Dict[str, Any]] = None,
     result_summary: Optional[List[Dict[str, Any]]] = None,
     problem_statement: Optional[str] = None,
-    narrative_context: str,
+    narrative_context: str = None,
     style_hint: Optional[str] = None,
     extra_guidance: Optional[str] = None,
     output_path: Optional[str | Path] = None,
     prompt_name: str | None = None,
     prompt_dir: str | None = None,
     model_args: Optional[Dict[str, Any]] = None,
+    # New parameters for automatic prepare_why_inputs integration
+    problem_ids: Optional[Sequence[str]] = None,
+    scenario: Optional[str] = None,
+    summary_fields: Optional[Sequence[str]] = None,
+    task_titles: Optional[Dict[str, str]] = None,
 ) -> str:
     """Render an HTML explanation by combining deterministic sections with LLM commentary.
 
     Either provide a ready-made ``trace_payload`` or let this function build one by passing
     ``plan``/``tracer``/``memory``/``metadata``/``problem_statement``.
+
+    **Simplified usage:** Pass ``problem_ids``, ``scenario``, and ``summary_fields`` to
+    automatically prepare result_summary and metadata. This eliminates the need to call
+    ``prepare_why_inputs`` separately.
+
+    Args:
+        generator: LLM generator for commentary.
+        problem_ids: (Optional) List of problem IDs to include in the report.
+        scenario: (Optional) Scenario description for the report.
+        summary_fields: (Optional) Fields to extract from each result.
+        task_titles: (Optional) Mapping of problem_id to human-readable titles.
+        narrative_context: (Optional) Context for LLM commentary.
+        style_hint: (Optional) Style guidance for LLM.
+        extra_guidance: (Optional) Additional instructions for LLM.
+        Other args: See original docstring.
+
+    Returns:
+        HTML string of the report.
     """
+    # Auto-prepare inputs if simplified parameters provided
+    if problem_ids is not None and scenario is not None and memory is not None:
+        if summary_fields is None:
+            summary_fields = ["parsed_answer", "solver_name"]
+
+        auto_result_summary, auto_metadata = prepare_why_inputs(
+            problem_ids,
+            memory,
+            scenario=scenario,
+            summary_fields=summary_fields,
+            metadata_overrides={
+                "task_titles": task_titles,
+                "narrative_context": narrative_context,
+                "style_hint": style_hint,
+                "extra_guidance": extra_guidance,
+            } if any([task_titles, narrative_context, style_hint, extra_guidance]) else None,
+        )
+
+        # Merge with explicitly provided metadata
+        if metadata is None:
+            metadata = auto_metadata
+        else:
+            metadata = {**auto_metadata, **metadata}
+
+        # Use auto-prepared result_summary if not explicitly provided
+        if result_summary is None:
+            result_summary = auto_result_summary
+
     meta_payload = dict(metadata or {})
     if result_summary is not None and "result_summary" not in meta_payload:
         meta_payload["result_summary"] = result_summary
+
+    if not narrative_context:
+        narrative_context = meta_payload.get("narrative_context", "")
+    if not style_hint:
+        style_hint = meta_payload.get("style_hint", "")
+    if not extra_guidance:
+        extra_guidance = meta_payload.get("extra_guidance", "")
 
     if trace_payload is None:
         if tracer is None:
@@ -921,6 +1017,7 @@ def why(
 __all__ = [
     "build_trace_payload",
     "why",
+    "prepare_why_inputs",
     "snapshot_memory",
     "serialize_plan",
 ]

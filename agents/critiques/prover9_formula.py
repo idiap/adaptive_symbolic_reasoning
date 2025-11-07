@@ -28,8 +28,10 @@ class FOL_Formula:
         except Exception as exc:
             tree = None
             self.is_valid = False
-            return
-    
+        finally:
+            # Critical: Cancel the alarm to prevent it from triggering later
+            signal.alarm(0)
+
         self.tree = tree
         if tree is None:
             self.is_valid = False

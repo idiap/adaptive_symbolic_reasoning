@@ -203,127 +203,53 @@ html
     <h2>Result Summary</h2>
     <div class="chip">
       <span class="k">Clinical Trial Enrollment</span>
-      <span class="v pill ok">A</span>
+      <span class="v pill ok">Yes</span>
     </div>
   </div>
 </section>
 
 <section class="grid" style="margin-top:8px">
   <div class="card" style="grid-column:span 12">
-    <h2>Problem-Specific Visualization</h2>
-    <h3>SMT Solver Assertions</h3>
-    <pre>
-; Declare variables and their types
-(declare-const age Int)
-(declare-const is_male Bool)
-(declare-const has_cva_history Bool)
-(declare-const has_neurogenic_bladder Bool)
-(declare-const has_urinary_sepsis Bool)
-(declare-const mdr_ecoli_infection Bool)
-(declare-const treatment_with_meropenem Bool)
-(declare-const has_stone_in_ureter Bool)
-(declare-const has_obstructive_uropathy Bool)
-(declare-const has_urethral_strictures Bool)
-(declare-const urine_positive_for_nitrites Bool)
-(declare-const urine_positive_for_leukocyte_esterase Bool)
-(declare-const positive_urine_culture_for_mdr_ecoli Bool)
-(declare-const has_renal_abscess Bool)
-(declare-const is_renal_transplant_recipient Bool)
-(declare-const is_pregnant_or_breastfeeding Bool)
-(declare-const has_polymicrobial_bacteremia Bool)
-
-; Define trial specific conditions
-(define-fun eligible_age () Bool
-  (>= age 18))
-
-(define-fun urinary_bsi_with_mdr_ecoli () Bool
-  (and has_urinary_sepsis 
-       mdr_ecoli_infection))
-
-(define-fun urinalysis_criteria () Bool
-  (or urine_positive_for_nitrites 
-      urine_positive_for_leukocyte_esterase
-      positive_urine_culture_for_mdr_ecoli))
-
-; Assert inclusion criteria
-(assert (and
-  eligible_age
-  is_male
-  urinary_bsi_with_mdr_ecoli
-  urinalysis_criteria
-))
-
-; Assert exclusion criteria
-(assert (not (or
-  has_polymicrobial_bacteremia
-  has_renal_abscess
-  is_pregnant_or_breastfeeding
-  is_renal_transplant_recipient
-)))
-
-; Instance assignments (Patient Profile)
-(assert (= age 62))
-(assert (= is_male true))
-(assert (= has_cva_history true))
-(assert (= has_neurogenic_bladder true))
-(assert (= has_urinary_sepsis true))
-(assert (= mdr_ecoli_infection true))
-(assert (= treatment_with_meropenem true))
-(assert (= has_stone_in_ureter true))
-(assert (= has_obstructive_uropathy false))
-(assert (= has_urethral_strictures false))
-(assert (= urine_positive_for_nitrites true))
-(assert (= urine_positive_for_leukocyte_esterase true))
-(assert (= positive_urine_culture_for_mdr_ecoli true))
-(assert (= has_renal_abscess false))
-(assert (= is_renal_transplant_recipient false))
-(assert (= is_pregnant_or_breastfeeding false))
-(assert (= has_polymicrobial_bacteremia false))
-
-; Check if the patient is eligible for the trial
-(check-sat)
-    </pre>
-  </div>
-</section>
-
-<section class="grid" style="margin-top:8px">
-  <div class="card" style="grid-column:span 12">
-    <h2>Verification</h2>
+    <h2>SMT Problem-Specific Visualization</h2>
     <table>
       <tr>
-        <th>Condition</th>
+        <th>Assertion</th>
         <th>Status</th>
       </tr>
       <tr>
-        <td>Eligible Age (≥18)</td>
+        <td>Age ≥ 18</td>
         <td class="pill ok">Satisfied</td>
       </tr>
       <tr>
-        <td>Male</td>
+        <td>Current urosepsis</td>
         <td class="pill ok">Satisfied</td>
       </tr>
       <tr>
-        <td>Urinary BSI with MDR E.coli</td>
+        <td>Resolved urosepsis</td>
         <td class="pill ok">Satisfied</td>
       </tr>
       <tr>
-        <td>Urinalysis Criteria</td>
+        <td>Multidrug-resistant E. coli</td>
         <td class="pill ok">Satisfied</td>
       </tr>
       <tr>
-        <td>No Polymicrobial Bacteremia</td>
+        <td>Susceptible to meropenem</td>
         <td class="pill ok">Satisfied</td>
       </tr>
       <tr>
-        <td>No Renal Abscess</td>
+        <td>Urinalysis criteria met</td>
         <td class="pill ok">Satisfied</td>
       </tr>
       <tr>
-        <td>Not Pregnant/Breastfeeding</td>
+        <td>No renal abscess</td>
         <td class="pill ok">Satisfied</td>
       </tr>
       <tr>
-        <td>Not Renal Transplant Recipient</td>
+        <td>No unresolved obstructive uropathy</td>
+        <td class="pill ok">Satisfied</td>
+      </tr>
+      <tr>
+        <td>Not a renal transplant recipient</td>
         <td class="pill ok">Satisfied</td>
       </tr>
     </table>
@@ -332,10 +258,15 @@ html
 
 <section class="grid" style="margin-top:8px">
   <div class="card" style="grid-column:span 12">
+    <h2>Verification</h2>
+    <p>All inclusion and exclusion criteria for the clinical trial were verified against the patient's profile using SMT assertions. The solver confirmed that all conditions were satisfied, leading to a positive enrollment decision.</p>
+  </div>
+</section>
+
+<section class="grid" style="margin-top:8px">
+  <div class="card callout" style="grid-column:span 12">
     <h2>Interpretation</h2>
-    <div class="callout">
-      The SMT solver verified that all inclusion criteria are met and none of the exclusion criteria apply to the patient. The formal code above shows the logical assertions and checks performed to ensure the patient's eligibility for the clinical trial. This guarantees the decision is based on rigorous logical evaluation.
-    </div>
+    <p>The SMT solver checked the patient's eligibility for the clinical trial by evaluating logical assertions derived from the trial's inclusion and exclusion criteria. The patient's profile met all necessary conditions, confirming eligibility for enrollment. The formal code, which includes variable declarations and assertions, ensures the decision's reliability and is available in the dedicated code section.</p>
   </div>
 </section>
 
@@ -345,71 +276,81 @@ html
       <pre>; Declare variables and their types
 (declare-const age Int)
 (declare-const is_male Bool)
-(declare-const has_cva_history Bool)
+(declare-const is_female Bool)
+(declare-const has_cva Bool)
 (declare-const has_neurogenic_bladder Bool)
-(declare-const has_urinary_sepsis Bool)
-(declare-const mdr_ecoli_infection Bool)
-(declare-const treatment_with_meropenem Bool)
-(declare-const has_stone_in_ureter Bool)
-(declare-const has_obstructive_uropathy Bool)
-(declare-const has_urethral_strictures Bool)
-(declare-const urine_positive_for_nitrites Bool)
-(declare-const urine_positive_for_leukocyte_esterase Bool)
-(declare-const positive_urine_culture_for_mdr_ecoli Bool)
+(declare-const has_catheter Bool)
+(declare-const has_prior_utis Bool)
+(declare-const has_prior_altered_mental_status Bool)
+(declare-const has_prior_urosepsis Bool)
+(declare-const has_current_urosepsis Bool)
+(declare-const resolved_urosepsis Bool)
+(declare-const multidrug_resistant_ecoli Bool)
+(declare-const susceptible_to_fosfomycin Bool)
+(declare-const susceptible_to_meropenem Bool)
+(declare-const susceptible_to_ceftriaxone Bool)
+(declare-const has_urinalysis_criteria Bool)
+(declare-const has_nitrites Bool)
+(declare-const has_leukocyte_esterase Bool)
+(declare-const positive_urine_culture Bool)
+(declare-const has_nonobstructing_stone Bool)
 (declare-const has_renal_abscess Bool)
 (declare-const is_renal_transplant_recipient Bool)
-(declare-const is_pregnant_or_breastfeeding Bool)
-(declare-const has_polymicrobial_bacteremia Bool)
+(declare-const polymicrobial_bacteremia Bool)
+(declare-const unresolved_obstructive_uropathy Bool)
+(declare-const is_pregnant Bool)
+(declare-const is_breastfeeding Bool)
 
-; Define trial specific conditions
-(define-fun eligible_age () Bool
-  (&gt;= age 18))
-
-(define-fun urinary_bsi_with_mdr_ecoli () Bool
-  (and has_urinary_sepsis 
-       mdr_ecoli_infection))
-
-(define-fun urinalysis_criteria () Bool
-  (or urine_positive_for_nitrites 
-      urine_positive_for_leukocyte_esterase
-      positive_urine_culture_for_mdr_ecoli))
+; Define derived variable for urinalysis criteria
+(define-fun eligible_urinalysis () Bool
+  (or has_nitrites has_leukocyte_esterase positive_urine_culture))
 
 ; Assert inclusion criteria
 (assert (and
-  eligible_age
-  is_male
-  urinary_bsi_with_mdr_ecoli
-  urinalysis_criteria
+  (&gt;= age 18)
+  has_current_urosepsis
+  resolved_urosepsis
+  multidrug_resistant_ecoli
+  (or susceptible_to_fosfomycin susceptible_to_meropenem susceptible_to_ceftriaxone)
+  (or is_male (not (or is_pregnant is_breastfeeding)))
+  (and (not polymicrobial_bacteremia) eligible_urinalysis)
 ))
 
 ; Assert exclusion criteria
 (assert (not (or
-  has_polymicrobial_bacteremia
   has_renal_abscess
-  is_pregnant_or_breastfeeding
+  unresolved_obstructive_uropathy
   is_renal_transplant_recipient
 )))
 
-; Instance assignments (Patient Profile)
+; Instance assignments
 (assert (= age 62))
 (assert (= is_male true))
-(assert (= has_cva_history true))
+(assert (= is_female false))
+(assert (= has_cva true))
 (assert (= has_neurogenic_bladder true))
-(assert (= has_urinary_sepsis true))
-(assert (= mdr_ecoli_infection true))
-(assert (= treatment_with_meropenem true))
-(assert (= has_stone_in_ureter true))
-(assert (= has_obstructive_uropathy false))
-(assert (= has_urethral_strictures false))
-(assert (= urine_positive_for_nitrites true))
-(assert (= urine_positive_for_leukocyte_esterase true))
-(assert (= positive_urine_culture_for_mdr_ecoli true))
+(assert (= has_catheter true))
+(assert (= has_prior_utis true))
+(assert (= has_prior_altered_mental_status true))
+(assert (= has_prior_urosepsis true))
+(assert (= has_current_urosepsis true))
+(assert (= resolved_urosepsis true))
+(assert (= multidrug_resistant_ecoli true))
+(assert (= susceptible_to_fosfomycin false))
+(assert (= susceptible_to_meropenem true))
+(assert (= susceptible_to_ceftriaxone false))
+(assert (= has_urinalysis_criteria true))
+(assert (= has_nitrites true))
+(assert (= has_leukocyte_esterase true))
+(assert (= positive_urine_culture true))
+(assert (= has_nonobstructing_stone true))
 (assert (= has_renal_abscess false))
 (assert (= is_renal_transplant_recipient false))
-(assert (= is_pregnant_or_breastfeeding false))
-(assert (= has_polymicrobial_bacteremia false))
+(assert (= polymicrobial_bacteremia false))
+(assert (= unresolved_obstructive_uropathy false))
+(assert (= is_pregnant false))
+(assert (= is_breastfeeding false))
 
-; Check if the patient is eligible for the trial
 (check-sat)</pre>
     </div>
   </section>
@@ -420,7 +361,7 @@ html
     <h2>Result Summary</h2>
     <div class="chip">
       <span class="k">Credential Compliance</span>
-      <span class="v pill ok">A</span>
+      <span class="v pill ok">Yes</span>
     </div>
   </div>
 </section>
@@ -429,42 +370,55 @@ html
   <div class="card" style="grid-column:span 12">
     <h2>Problem-Specific Visualization</h2>
     <table>
-      <tr>
-        <th>Step</th>
-        <th>Logical Notation</th>
-      </tr>
-      <tr>
-        <td>Premise 1</td>
-        <td class="mono small">∀x (ClinicalStaff(x) ∨ AdministrativeStaff(x))</td>
-      </tr>
-      <tr>
-        <td>Premise 2</td>
-        <td class="mono small">∀x (DirectCare(x) → ClinicalStaff(x))</td>
-      </tr>
-      <tr>
-        <td>Premise 3</td>
-        <td class="mono small">∀x (ClinicalStaff(x) ∧ ¬InfectionTraining(x) → ¬Credentialed(x))</td>
-      </tr>
-      <tr>
-        <td>Premise 4</td>
-        <td class="mono small">∀x (ClinicalStaff(x) ∧ ¬HIPAACert(x) → ¬Credentialed(x))</td>
-      </tr>
-      <tr>
-        <td>Premise 5</td>
-        <td class="mono small">∀x (AdministrativeStaff(x) → ¬DirectCare(x))</td>
-      </tr>
-      <tr>
-        <td>Premise 6</td>
-        <td class="mono small">∀x (RegisteredNurse(x) → DirectCare(x))</td>
-      </tr>
-      <tr>
-        <td>Personnel Record</td>
-        <td class="mono small">RegisteredNurse(johnson) ∧ InfectionTraining(johnson) ∧ ¬HIPAACert(johnson)</td>
-      </tr>
-      <tr>
-        <td>Conclusion</td>
-        <td class="mono small">¬Credentialed(johnson)</td>
-      </tr>
+      <thead>
+        <tr>
+          <th>Step</th>
+          <th>Logical Expression</th>
+          <th>Explanation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>∀x (ClinicalStaff(x) ⊕ AdministrativeStaff(x))</td>
+          <td>All hospital staff are classified as either clinical or administrative.</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>∀x (ProvideCare(x) → ClinicalStaff(x))</td>
+          <td>All personnel who provide direct patient care are clinical staff.</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>∀x ((ClinicalStaff(x) ∧ ¬TrainingCompleted(x)) → ¬Credentialed(x))</td>
+          <td>No clinical staff is credentialed without infection control training.</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>∀x ((ClinicalStaff(x) ∧ ¬HIPAACertificationCompleted(x)) → ¬Credentialed(x))</td>
+          <td>No clinical staff is credentialed without HIPAA certification.</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>∀x (AdministrativeStaff(x) → ¬ProvideCare(x))</td>
+          <td>No administrative staff provide direct patient care.</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>∀x (RegisteredNurse(x) → ProvideCare(x))</td>
+          <td>All registered nurses provide direct patient care.</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>RegisteredNurse(johnson) ∧ TrainingCompleted(johnson) ∧ ¬HIPAACertificationCompleted(johnson)</td>
+          <td>Johnson is a registered nurse with incomplete HIPAA certification.</td>
+        </tr>
+        <tr>
+          <td>Conclusion</td>
+          <td>¬Credentialed(johnson)</td>
+          <td>Johnson is not credentialed due to incomplete HIPAA certification.</td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </section>
@@ -472,33 +426,14 @@ html
 <section class="grid" style="margin-top:8px">
   <div class="card" style="grid-column:span 12">
     <h2>Verification</h2>
-    <table>
-      <tr>
-        <th>Constraint</th>
-        <th>Satisfied</th>
-      </tr>
-      <tr>
-        <td>Clinical staff must complete annual HIPAA certification</td>
-        <td class="pill no">No</td>
-      </tr>
-      <tr>
-        <td>Registered nurses provide direct patient care</td>
-        <td class="pill ok">Yes</td>
-      </tr>
-      <tr>
-        <td>Personnel record matches premises</td>
-        <td class="pill ok">Yes</td>
-      </tr>
-    </table>
+    <p class="mono small">The conclusion ¬Credentialed(johnson) follows logically from the premises, confirming that Nurse Johnson is not credentialed due to the lack of HIPAA certification.</p>
   </div>
 </section>
 
 <section class="grid" style="margin-top:8px">
-  <div class="card" style="grid-column:span 12">
+  <div class="card callout" style="grid-column:span 12">
     <h2>Interpretation</h2>
-    <div class="callout">
-      Nurse Johnson is classified as clinical staff because registered nurses provide direct patient care. However, due to the lack of completed annual HIPAA certification, the system correctly concludes that Johnson is not credentialed. The formal code verifies this conclusion using logical predicates and premises.
-    </div>
+    <p>The formal logic proof demonstrates that Nurse Johnson, despite completing infection control training, is not credentialed because she has not completed the required HIPAA certification. This aligns with hospital policy that mandates both certifications for credentialing clinical staff.</p>
   </div>
 </section>
 
@@ -508,20 +443,20 @@ html
       <pre>Predicates:
 ClinicalStaff(x) ::: x is classified as clinical staff.
 AdministrativeStaff(x) ::: x is classified as administrative staff.
-DirectCare(x) ::: x provides direct patient care.
+ProvideCare(x) ::: x provides direct patient care.
 Credentialed(x) ::: x is credentialed.
-InfectionTraining(x) ::: x has completed annual infection control training.
-HIPAACert(x) ::: x has completed annual HIPAA certification.
+TrainingCompleted(x) ::: x has completed annual infection control training.
+HIPAACertificationCompleted(x) ::: x has completed annual HIPAA certification.
 RegisteredNurse(x) ::: x is a registered nurse.
 
 Premises:
-∀x (ClinicalStaff(x) ∨ AdministrativeStaff(x)) ::: All hospital staff are classified as either clinical staff or administrative staff.
-∀x (DirectCare(x) → ClinicalStaff(x)) ::: All personnel who provide direct patient care are clinical staff.
-∀x (ClinicalStaff(x) ∧ ¬InfectionTraining(x) → ¬Credentialed(x)) ::: No clinical staff is credentialed if they have not completed annual infection control training.
-∀x (ClinicalStaff(x) ∧ ¬HIPAACert(x) → ¬Credentialed(x)) ::: No clinical staff is credentialed if they have not completed annual HIPAA certification.
-∀x (AdministrativeStaff(x) → ¬DirectCare(x)) ::: No administrative staff provide direct patient care.
-∀x (RegisteredNurse(x) → DirectCare(x)) ::: All registered nurses provide direct patient care.
-RegisteredNurse(johnson) ∧ InfectionTraining(johnson) ∧ ¬HIPAACert(johnson) ::: Personnel Record for Johnson, R.N.: Position: Registered Nurse; Mandatory Compliance Status: Annual infection control training completed; Annual HIPAA certification not completed.
+∀x (ClinicalStaff(x) ⊕ AdministrativeStaff(x)) ::: All hospital staff are classified as either clinical staff or administrative staff.
+∀x (ProvideCare(x) → ClinicalStaff(x)) ::: All personnel who provide direct patient care are clinical staff.
+∀x ((ClinicalStaff(x) ∧ ¬TrainingCompleted(x)) → ¬Credentialed(x)) ::: No clinical staff is credentialed if they have not completed annual infection control training.
+∀x ((ClinicalStaff(x) ∧ ¬HIPAACertificationCompleted(x)) → ¬Credentialed(x)) ::: No clinical staff is credentialed if they have not completed annual HIPAA certification.
+∀x (AdministrativeStaff(x) → ¬ProvideCare(x)) ::: No administrative staff provide direct patient care.
+∀x (RegisteredNurse(x) → ProvideCare(x)) ::: All registered nurses provide direct patient care.
+RegisteredNurse(johnson) ∧ TrainingCompleted(johnson) ∧ ¬HIPAACertificationCompleted(johnson) ::: Position: Registered Nurse; Mandatory Compliance Status: Annual infection control training completed; Annual HIPAA certification not completed.
 
 Conclusions:
 ¬Credentialed(johnson) ::: According to the system, Nurse Johnson is not credentialed.</pre>
@@ -532,7 +467,7 @@ Conclusions:
   <section class="grid" style="margin-top:8px">
     <div class="card" style="grid-column:span 12">
       <h2>Credential Compliance · Premises (fol_solver)</h2>
-      <pre>[&#x27;all x.((ClinicalStaff(x)) | (AdministrativeStaff(x)))&#x27;, &#x27;all x.((DirectCare(x)) -&gt; (ClinicalStaff(x)))&#x27;, &#x27;all x.(((ClinicalStaff(x)) &amp; (not InfectionTraining(x))) -&gt; (not Credentialed(x)))&#x27;, &#x27;all x.(((ClinicalStaff(x)) &amp; (not HIPAACert(x))) -&gt; (not Credentialed(x)))&#x27;, &#x27;all x.((AdministrativeStaff(x)) -&gt; (not DirectCare(x)))&#x27;, &#x27;all x.((RegisteredNurse(x)) -&gt; (DirectCare(x)))&#x27;, &#x27;((RegisteredNurse(Johnson)) &amp; (InfectionTraining(Johnson))) &amp; (not HIPAACert(Johnson))&#x27;]</pre>
+      <pre>[&#x27;all x.(((ClinicalStaff(x)) &amp; not (AdministrativeStaff(x))) | (not (ClinicalStaff(x)) &amp; (AdministrativeStaff(x))))&#x27;, &#x27;all x.((ProvideCare(x)) -&gt; (ClinicalStaff(x)))&#x27;, &#x27;all x.(((ClinicalStaff(x)) &amp; (not TrainingCompleted(x))) -&gt; (not Credentialed(x)))&#x27;, &#x27;all x.(((ClinicalStaff(x)) &amp; (not HIPAACertificationCompleted(x))) -&gt; (not Credentialed(x)))&#x27;, &#x27;all x.((AdministrativeStaff(x)) -&gt; (not ProvideCare(x)))&#x27;, &#x27;all x.((RegisteredNurse(x)) -&gt; (ProvideCare(x)))&#x27;, &#x27;((RegisteredNurse(Johnson)) &amp; (TrainingCompleted(Johnson))) &amp; (not HIPAACertificationCompleted(Johnson))&#x27;]</pre>
     </div>
   </section>
 
@@ -550,39 +485,43 @@ html
     <h2>Result Summary</h2>
     <div class="chip">
       <span class="k">Discharge Clearance</span>
-      <span class="v pill ok">A</span>
+      <span class="v pill ok">Yes</span>
     </div>
   </div>
 </section>
 
 <section class="grid" style="margin-top:8px">
   <div class="card" style="grid-column:span 12">
-    <h2>Derivation Chain</h2>
+    <h2>Problem-Specific Visualization</h2>
+    <h3>Derivation Chain</h3>
     <table>
       <tr>
         <th>Facts</th>
-        <th>Rules</th>
-        <th>Conclusion</th>
+        <th>Rules Applied</th>
+        <th>Conclusions</th>
       </tr>
       <tr>
         <td>
           <ul>
             <li>stable_vitals(Margaret_Chen, True)</li>
-            <li>self_care_ability(Margaret_Chen, True)</li>
-            <li>completed_discharge_teaching(Margaret_Chen, True)</li>
-            <li>new_symptoms(Margaret_Chen, False)</li>
+            <li>self_care(Margaret_Chen, True)</li>
+            <li>discharge_teaching_completed(Margaret_Chen, True)</li>
+            <li>no_new_symptoms(Margaret_Chen, True)</li>
           </ul>
         </td>
         <td>
           <ul>
-            <li>stable_vitals($x, True) → medically_stable($x, True)</li>
-            <li>self_care_ability($x, True) → functionally_independent($x, True)</li>
-            <li>medically_stable($x, True) && new_symptoms($x, False) → ready_for_discharge_evaluation($x, True)</li>
-            <li>functionally_independent($x, True) && completed_discharge_teaching($x, True) → cleared_for_discharge($x, True)</li>
+            <li>stable_vitals($x, True) &rarr; medically_stable($x, True)</li>
+            <li>self_care($x, True) &rarr; functionally_independent($x, True)</li>
+            <li>medically_stable($x, True) &amp;&amp; no_new_symptoms($x, True) &rarr; discharge_ready($x, True)</li>
+            <li>functionally_independent($x, True) &amp;&amp; discharge_teaching_completed($x, True) &rarr; cleared_for_discharge($x, True)</li>
           </ul>
         </td>
         <td>
           <ul>
+            <li>medically_stable(Margaret_Chen, True)</li>
+            <li>functionally_independent(Margaret_Chen, True)</li>
+            <li>discharge_ready(Margaret_Chen, True)</li>
             <li>cleared_for_discharge(Margaret_Chen, True)</li>
           </ul>
         </td>
@@ -594,28 +533,13 @@ html
 <section class="grid" style="margin-top:8px">
   <div class="card" style="grid-column:span 12">
     <h2>Verification</h2>
-    <table>
-      <tr>
-        <th>Condition</th>
-        <th>Status</th>
-      </tr>
-      <tr>
-        <td>Stable vital signs</td>
-        <td class="pill ok">Satisfied</td>
-      </tr>
-      <tr>
-        <td>Self-care ability</td>
-        <td class="pill ok">Satisfied</td>
-      </tr>
-      <tr>
-        <td>No new symptoms</td>
-        <td class="pill ok">Satisfied</td>
-      </tr>
-      <tr>
-        <td>Completed discharge teaching</td>
-        <td class="pill ok">Satisfied</td>
-      </tr>
-    </table>
+    <p>The solution satisfies all constraints and rules as follows:</p>
+    <ul>
+      <li>Margaret Chen's stable vital signs confirm she is medically stable.</li>
+      <li>Her ability to perform self-care activities confirms she is functionally independent.</li>
+      <li>Being medically stable and having no new symptoms confirms she is ready for discharge evaluation.</li>
+      <li>Completing discharge teaching and being functionally independent confirms she is cleared for discharge.</li>
+    </ul>
   </div>
 </section>
 
@@ -623,7 +547,7 @@ html
   <div class="card" style="grid-column:span 12">
     <h2>Interpretation</h2>
     <div class="callout">
-      The logical deduction process confirms that Margaret Chen meets all the necessary conditions for discharge clearance. The formal code, which includes predicates and rules, systematically verifies each condition, ensuring a reliable conclusion.
+      <p>The logical deduction process confirms that Margaret Chen meets all the criteria for discharge clearance. Each fact about her condition aligns with the hospital's discharge protocol, ensuring a safe and appropriate discharge decision. The formal code, which is included elsewhere, provides a detailed breakdown of this reasoning process.</p>
     </div>
   </div>
 </section>
@@ -632,26 +556,26 @@ html
     <div class="card" style="grid-column:span 12">
       <h2>Discharge Clearance · Formalization (lp_solver)</h2>
       <pre>Predicates:
-stable_vitals($x, bool) ::: Does patient x have stable vital signs?
-medically_stable($x, bool) ::: Is patient x medically stable?
-self_care_ability($x, bool) ::: Can patient x perform self-care activities?
-functionally_independent($x, bool) ::: Is patient x functionally independent?
-new_symptoms($x, bool) ::: Does patient x have new symptoms?
-ready_for_discharge_evaluation($x, bool) ::: Is patient x ready for discharge evaluation?
-completed_discharge_teaching($x, bool) ::: Has patient x completed discharge teaching?
-cleared_for_discharge($x, bool) ::: Is patient x cleared for discharge?
+stable_vitals($x, bool) ::: Does x have stable vital signs?
+medically_stable($x, bool) ::: Is x medically stable?
+self_care($x, bool) ::: Can x perform self-care activities?
+functionally_independent($x, bool) ::: Is x functionally independent?
+no_new_symptoms($x, bool) ::: Does x have no new symptoms?
+discharge_teaching_completed($x, bool) ::: Has x completed discharge teaching?
+discharge_ready($x, bool) ::: Is x ready for discharge evaluation?
+cleared_for_discharge($x, bool) ::: Is x cleared for discharge?
 
 Facts:
 stable_vitals(Margaret_Chen, True) ::: Margaret Chen has stable vital signs.
-self_care_ability(Margaret_Chen, True) ::: Margaret Chen can perform self-care activities.
-completed_discharge_teaching(Margaret_Chen, True) ::: Margaret Chen has completed discharge teaching.
-new_symptoms(Margaret_Chen, False) ::: Margaret Chen has no new symptoms.
+self_care(Margaret_Chen, True) ::: Margaret Chen can perform self-care activities.
+discharge_teaching_completed(Margaret_Chen, True) ::: Margaret Chen has completed discharge teaching.
+no_new_symptoms(Margaret_Chen, True) ::: Margaret Chen has no new symptoms.
 
 Rules:
 stable_vitals($x, True) &gt;&gt;&gt; medically_stable($x, True) ::: If a patient has stable vital signs, then the patient is medically stable.
-self_care_ability($x, True) &gt;&gt;&gt; functionally_independent($x, True) ::: If a patient can perform self-care activities, then the patient is functionally independent.
-medically_stable($x, True) &amp;&amp; new_symptoms($x, False) &gt;&gt;&gt; ready_for_discharge_evaluation($x, True) ::: If a patient is medically stable and has no new symptoms, then the patient is ready for discharge evaluation.
-functionally_independent($x, True) &amp;&amp; completed_discharge_teaching($x, True) &gt;&gt;&gt; cleared_for_discharge($x, True) ::: If a patient is functionally independent and has completed discharge teaching, then the patient is cleared for discharge.
+self_care($x, True) &gt;&gt;&gt; functionally_independent($x, True) ::: If a patient can perform self-care activities, then the patient is functionally independent.
+medically_stable($x, True) &amp;&amp; no_new_symptoms($x, True) &gt;&gt;&gt; discharge_ready($x, True) ::: If a patient is medically stable and has no new symptoms, then the patient is ready for discharge evaluation.
+functionally_independent($x, True) &amp;&amp; discharge_teaching_completed($x, True) &gt;&gt;&gt; cleared_for_discharge($x, True) ::: If a patient is functionally independent and has completed discharge teaching, then the patient is cleared for discharge.
 
 Query:
 cleared_for_discharge(Margaret_Chen, True) ::: Margaret Chen is cleared for discharge.</pre>
@@ -662,7 +586,7 @@ cleared_for_discharge(Margaret_Chen, True) ::: Margaret Chen is cleared for disc
   <section class="grid" style="margin-top:8px">
     <div class="card" style="grid-column:span 12">
       <h2>Discharge Clearance · Facts (lp_solver)</h2>
-      <pre>[&#x27;stable_vitals(Margaret_Chen, True)&#x27;, &#x27;self_care_ability(Margaret_Chen, True)&#x27;, &#x27;completed_discharge_teaching(Margaret_Chen, True)&#x27;, &#x27;new_symptoms(Margaret_Chen, False)&#x27;]</pre>
+      <pre>[&#x27;stable_vitals(Margaret_Chen, True)&#x27;, &#x27;self_care(Margaret_Chen, True)&#x27;, &#x27;discharge_teaching_completed(Margaret_Chen, True)&#x27;, &#x27;no_new_symptoms(Margaret_Chen, True)&#x27;]</pre>
     </div>
   </section>
 
@@ -670,7 +594,7 @@ cleared_for_discharge(Margaret_Chen, True) ::: Margaret Chen is cleared for disc
   <section class="grid" style="margin-top:8px">
     <div class="card" style="grid-column:span 12">
       <h2>Discharge Clearance · Rules (lp_solver)</h2>
-      <pre>[&#x27;stable_vitals($x, True) &gt;&gt;&gt; medically_stable($x, True)&#x27;, &#x27;self_care_ability($x, True) &gt;&gt;&gt; functionally_independent($x, True)&#x27;, &#x27;medically_stable($x, True) &amp;&amp; new_symptoms($x, False) &gt;&gt;&gt; ready_for_discharge_evaluation($x, True)&#x27;, &#x27;functionally_independent($x, True) &amp;&amp; completed_discharge_teaching($x, True) &gt;&gt;&gt; cleared_for_discharge($x, True)&#x27;]</pre>
+      <pre>[&#x27;stable_vitals($x, True) &gt;&gt;&gt; medically_stable($x, True)&#x27;, &#x27;self_care($x, True) &gt;&gt;&gt; functionally_independent($x, True)&#x27;, &#x27;medically_stable($x, True) &amp;&amp; no_new_symptoms($x, True) &gt;&gt;&gt; discharge_ready($x, True)&#x27;, &#x27;functionally_independent($x, True) &amp;&amp; discharge_teaching_completed($x, True) &gt;&gt;&gt; cleared_for_discharge($x, True)&#x27;]</pre>
     </div>
   </section>
 

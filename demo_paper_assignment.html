@@ -145,7 +145,7 @@ Rules that every valid schedule must satisfy
 
 Oral-talk eligibility rule: A paper may be placed in an oral session only if its reviewer score is at least 4.0.
 
-Topic-match rule: A paper can only be assigned to a session if its subject area appears in the session’s topic whitelist.
+Topic-match rule: A paper can only be assigned to a session if its subject area appears in the session&#x27;s topic whitelist.
 
 Capacity rule: A session cannot be assigned more papers than its capacity allows.
 
@@ -184,13 +184,14 @@ html
   <div class="card" style="grid-column:span 12">
     <h2>Result Summary</h2>
     <div class="pill ok">Solution Found</div>
-    <div class="pill ok">All Constraints Satisfied</div>
+    <div class="chip"><span class="k">Problem ID:</span> <span class="v">ques_1</span></div>
+    <div class="chip"><span class="k">Solver:</span> <span class="v">MiniZinc</span></div>
   </div>
 </section>
 
 <section class="grid" style="margin-top:8px">
   <div class="card" style="grid-column:span 12">
-    <h2>Conference Session Assignments</h2>
+    <h2>Final Assignment</h2>
     <table>
       <thead>
         <tr>
@@ -230,20 +231,22 @@ html
         </tr>
       </thead>
       <tbody>
-        <tr><td>Oral-Talk Eligibility</td><td><div class="pill ok">Satisfied</div></td></tr>
-        <tr><td>Topic-Match</td><td><div class="pill ok">Satisfied</div></td></tr>
-        <tr><td>Capacity</td><td><div class="pill ok">Satisfied</div></td></tr>
-        <tr><td>Author-Session</td><td><div class="pill ok">Satisfied</div></td></tr>
-        <tr><td>Coverage Requirement</td><td><div class="pill ok">Satisfied</div></td></tr>
+        <tr><td>Oral-talk eligibility rule</td><td><span class="pill ok">Satisfied</span></td></tr>
+        <tr><td>Topic-match rule</td><td><span class="pill ok">Satisfied</span></td></tr>
+        <tr><td>Capacity rule</td><td><span class="pill ok">Satisfied</span></td></tr>
+        <tr><td>Author-session rule</td><td><span class="pill ok">Satisfied</span></td></tr>
+        <tr><td>Coverage requirement</td><td><span class="pill ok">Satisfied</span></td></tr>
       </tbody>
     </table>
   </div>
 </section>
 
 <section class="grid" style="margin-top:8px">
-  <div class="card callout" style="grid-column:span 12">
+  <div class="card" style="grid-column:span 12">
     <h2>Interpretation</h2>
-    <p>The solution assigns each paper to a session while respecting all constraints: oral sessions only include papers with scores ≥ 4.0, each paper matches the session's topic whitelist, no session exceeds its capacity, and no author presents more than one paper per session. The full MiniZinc code, which ensures these constraints, is available in a dedicated section.</p>
+    <div class="callout">
+      The solution assigns all papers to sessions while respecting the constraints: each paper is placed in a session that matches its topic, oral sessions only include papers with a score of 4.0 or higher, no session exceeds its capacity, and no author presents more than one paper per session. The formal MiniZinc code ensures these constraints are met, providing a feasible schedule for the conference.
+    </div>
   </div>
 </section>
   <footer>Generated on-demand from the execution trace · Formal solvers provide the guarantees, interpretations may not.</footer>
