@@ -472,69 +472,68 @@ def _render_html(structured: Dict[str, Any], commentary: Dict[str, List[str]]) -
 _BASE_STYLE = """
 <style>
   :root{
-    --bg:#0b1220;
-    --panel:#111a2b;
-    --soft:#1a2438;
-    --ink:#e8eefc;
-    --sub:#9fb3d9;
-    --accent:#7cc4ff;
-    --accent-2:#b892ff;
-    --ok:#4ade80;
-    --warn:#facc15;
-    --bad:#fb7185;
-    --cv:#8b5cf6;
-    --nlp:#f59e0b;
-    --sys:#10b981;
-    --rl:#3b82f6;
-    --theory:#ec4899;
-    --code:#0f172a;
-    --chip:#233251;
+    --bg:#f7f9fc;
+    --panel:#ffffff;
+    --soft:#eef3fb;
+    --ink:#1f2a37;
+    --sub:#5f728d;
+    --accent:#2563eb;
+    --accent-2:#7c3aed;
+    --ok:#15803d;
+    --warn:#b45309;
+    --bad:#b91c1c;
+    --cv:#4c1d95;
+    --nlp:#92400e;
+    --sys:#065f46;
+    --rl:#1d4ed8;
+    --theory:#9d174d;
+    --code:#f1f5f9;
+    --chip:#e2e8f0;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;padding:0;background:linear-gradient(180deg,#0b1220 0%, #0a0f1c 60%, #0b1220 100%);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial,"Noto Sans",sans-serif;line-height:1.55}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial,"Noto Sans",sans-serif;line-height:1.55}
   a{color:var(--accent)}
-  .container{max-width:1200px;margin:32px auto;padding:0 20px}
-  header{display:flex;gap:16px;align-items:center;margin-bottom:24px}
-  .logo{width:46px;height:46px;border-radius:12px;background:radial-gradient(120% 120% at 20% 20%, #7cc4ff 0%, #b892ff 40%, #111a2b 100%);box-shadow:0 10px 30px rgba(124,196,255,.25), inset 0 0 14px rgba(184,146,255,.3)}
-  h1{font-size:30px;margin:0;font-weight:800;letter-spacing:.2px}
+  .container{max-width:1100px;margin:24px auto;padding:0 16px}
+  header{display:flex;gap:16px;align-items:center;margin-bottom:20px}
+  .logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#2563eb,#7c3aed);box-shadow:0 6px 18px rgba(37,99,235,.25)}
+  h1{font-size:28px;margin:0;font-weight:700;letter-spacing:.2px;color:var(--ink)}
   .subtitle{color:var(--sub);margin-top:2px;font-weight:500}
   .grid{display:grid;gap:16px;grid-template-columns:repeat(12,1fr)}
-  .card{grid-column:span 12;background:linear-gradient(180deg,var(--panel), #0f172a);border:1px solid rgba(124,196,255,.15);border-radius:16px;padding:18px 20px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
-  .card h2{margin:2px 0 10px 0;font-size:20px;letter-spacing:.2px}
-  .card h3{margin:16px 0 8px 0;font-size:16px;color:#cbd5e1}
+  .card{grid-column:span 12;background:var(--panel);border:1px solid #e4e7ec;border-radius:14px;padding:18px 20px;box-shadow:0 8px 24px rgba(15,23,42,.08)}
+  .card h2{margin:2px 0 10px 0;font-size:20px;color:var(--ink)}
+  .card h3{margin:16px 0 8px 0;font-size:15px;color:var(--sub)}
   .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
-  .chip{background:var(--chip);color:var(--ink);padding:6px 12px;border-radius:999px;border:1px solid rgba(124,196,255,.18);font-size:12px}
-  code, pre{background:var(--code);color:#dbeafe;border-radius:10px}
-  pre{padding:14px;overflow:auto;border:1px solid rgba(124,196,255,.18);font-size:12px}
-  table{width:100%;border-collapse:separate;border-spacing:0 6px}
-  th,td{text-align:left;padding:8px 10px;font-size:13px}
-  th{color:#cbd5e1;font-weight:700;border-bottom:1px solid rgba(124,196,255,.25)}
-  tr{background:rgba(26,36,56,.65)}
+  .chip{background:var(--chip);color:var(--ink);padding:6px 12px;border-radius:999px;border:1px solid #d5dae1;font-size:12px;font-weight:600}
+  code, pre{background:var(--code);color:#0f172a;border-radius:10px}
+  pre{padding:14px;overflow:auto;border:1px solid #d5dae1;font-size:12px}
+  table{width:100%;border-collapse:separate;border-spacing:0 6px;background:#fefefe;border:1px solid #e4e7ec;border-radius:12px}
+  th{color:#475467;font-weight:700;border-bottom:1px solid #e4e7ec;background:#f3f6fb;padding:10px 12px;font-size:13px}
+  td{text-align:left;padding:10px 12px;font-size:13px;color:#1f2a37;background:#ffffff}
   tr td:first-child{border-top-left-radius:10px;border-bottom-left-radius:10px}
   tr td:last-child{border-top-right-radius:10px;border-bottom-right-radius:10px}
   .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
-  .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;font-weight:700}
-  .pill.ok{background:rgba(34,197,94,.12);color:#bbf7d0;border:1px solid rgba(34,197,94,.35)}
-  .pill.warn{background:rgba(250,204,21,.12);color:#fde68a;border:1px solid rgba(250,204,21,.35)}
-  .session-box{background:rgba(26,36,56,.8);border:1px solid rgba(124,196,255,.2);border-radius:12px;padding:14px}
-  .session-box h4{margin:0 0 8px 0;font-size:15px;color:#cbd5e1;font-weight:700}
-  .paper-badge{display:inline-block;padding:4px 8px;margin:3px;border-radius:6px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,.12)}
-  .paper-badge.cv{background:rgba(139,92,246,.2);color:#c4b5fd}
-  .paper-badge.nlp{background:rgba(245,158,11,.2);color:#fcd34d}
-  .paper-badge.sys{background:rgba(16,185,129,.2);color:#6ee7b7}
-  .paper-badge.rl{background:rgba(59,130,246,.2);color:#93c5fd}
-  .paper-badge.theory{background:rgba(236,72,153,.2);color:#f9a8d4}
-  .oral-badge{background:rgba(124,196,255,.15);color:#7cc4ff;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:600;margin-left:8px}
-  .poster-badge{background:rgba(184,146,255,.15);color:#b892ff;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:600;margin-left:8px}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;font-weight:700;font-size:12px;border:1px solid transparent}
+  .pill.ok{background:rgba(21,128,61,.12);color:#166534;border-color:rgba(21,128,61,.4)}
+  .pill.warn{background:rgba(180,83,9,.12);color:#92400e;border-color:rgba(180,83,9,.35)}
+  .session-box{background:#f4f7fb;border:1px solid #e4e7ec;border-radius:12px;padding:14px}
+  .session-box h4{margin:0 0 8px 0;font-size:15px;color:#1f2a37;font-weight:600}
+  .paper-badge{display:inline-block;padding:4px 8px;margin:3px;border-radius:6px;font-size:11px;font-weight:600;border:1px solid #d5dae1;background:#eef2ff;color:#3730a3}
+  .paper-badge.cv{background:#ede9fe;color:#4c1d95}
+  .paper-badge.nlp{background:#fef3c7;color:#92400e}
+  .paper-badge.sys{background:#d1fae5;color:#065f46}
+  .paper-badge.rl{background:#e0f2fe;color:#1d4ed8}
+  .paper-badge.theory{background:#fce7f3;color:#9d174d}
+  .oral-badge{background:#dbeafe;color:#1d4ed8;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:600;margin-left:8px}
+  .poster-badge{background:#e9d5ff;color:#7c3aed;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:600;margin-left:8px}
   .plan-flow{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;padding:0}
-  .plan-flow li{list-style:none;background:rgba(255,255,255,.04);padding:6px 12px;border-radius:999px;border:1px solid rgba(124,196,255,.18);font-size:12px}
-  .dag-svg rect.module{fill:rgba(17,26,43,.95);stroke:rgba(124,196,255,.6);stroke-width:2.5}
-  .dag-svg text{font-family:Inter,sans-serif}
+  .plan-flow li{list-style:none;background:#eef2ff;padding:6px 12px;border-radius:999px;border:1px solid #dbe4ff;font-size:12px;color:#1e3a8a}
+  .dag-svg rect.module{fill:#ffffff;stroke:#2563eb;stroke-width:2.2;filter:drop-shadow(0 2px 6px rgba(15,23,42,.12))}
+  .dag-svg text{font-family:Inter,sans-serif;fill:#1f2a37;font-weight:600}
   .trace-table{width:100%;margin-top:10px}
   .trace-table tr td{font-size:12px}
   details{margin-top:8px}
   summary{cursor:pointer;font-weight:600;color:var(--accent)}
-  footer{margin:30px 0 12px 0;color:#8aa2c8;font-size:12px;text-align:center}
+  footer{margin:24px 0 12px 0;color:#64748b;font-size:12px;text-align:center}
   @media (max-width: 900px){ .grid{grid-template-columns:1fr} }
 </style>
 """
@@ -861,8 +860,14 @@ def _render_formalization_sections(problem_label: str | None, snippets: Optional
 
 def why(
     generator,
-    trace_payload: Dict[str, Any],
+    trace_payload: Optional[Dict[str, Any]] = None,
     *,
+    plan: Optional[Plan] = None,
+    tracer: Optional[TracePersister] = None,
+    memory=None,
+    metadata: Optional[Dict[str, Any]] = None,
+    result_summary: Optional[List[Dict[str, Any]]] = None,
+    problem_statement: Optional[str] = None,
     narrative_context: str,
     style_hint: Optional[str] = None,
     extra_guidance: Optional[str] = None,
@@ -871,7 +876,33 @@ def why(
     prompt_dir: str | None = None,
     model_args: Optional[Dict[str, Any]] = None,
 ) -> str:
-    """Render an HTML explanation by combining deterministic sections with LLM commentary."""
+    """Render an HTML explanation by combining deterministic sections with LLM commentary.
+
+    Either provide a ready-made ``trace_payload`` or let this function build one by passing
+    ``plan``/``tracer``/``memory``/``metadata``/``problem_statement``.
+    """
+    meta_payload = dict(metadata or {})
+    if result_summary is not None and "result_summary" not in meta_payload:
+        meta_payload["result_summary"] = result_summary
+
+    if trace_payload is None:
+        if tracer is None:
+            raise ValueError("Either trace_payload or tracer must be provided")
+        trace_payload = build_trace_payload(
+            plan,
+            tracer,
+            memory=memory,
+            metadata=meta_payload,
+            problem_statement=problem_statement,
+        )
+    else:
+        # When caller passes a payload but still supplies metadata overrides,
+        # merge them into the structured context by updating trace payload.
+        if meta_payload:
+            trace_payload = dict(trace_payload)
+            trace_payload.setdefault("metadata", {})
+            trace_payload["metadata"] = {**trace_payload["metadata"], **meta_payload}
+
     structured = _prepare_context(trace_payload)
     commentary = _generate_commentary(
         generator,

@@ -10,69 +10,68 @@
 
 <style>
   :root{
-    --bg:#0b1220;
-    --panel:#111a2b;
-    --soft:#1a2438;
-    --ink:#e8eefc;
-    --sub:#9fb3d9;
-    --accent:#7cc4ff;
-    --accent-2:#b892ff;
-    --ok:#4ade80;
-    --warn:#facc15;
-    --bad:#fb7185;
-    --cv:#8b5cf6;
-    --nlp:#f59e0b;
-    --sys:#10b981;
-    --rl:#3b82f6;
-    --theory:#ec4899;
-    --code:#0f172a;
-    --chip:#233251;
+    --bg:#f7f9fc;
+    --panel:#ffffff;
+    --soft:#eef3fb;
+    --ink:#1f2a37;
+    --sub:#5f728d;
+    --accent:#2563eb;
+    --accent-2:#7c3aed;
+    --ok:#15803d;
+    --warn:#b45309;
+    --bad:#b91c1c;
+    --cv:#4c1d95;
+    --nlp:#92400e;
+    --sys:#065f46;
+    --rl:#1d4ed8;
+    --theory:#9d174d;
+    --code:#f1f5f9;
+    --chip:#e2e8f0;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;padding:0;background:linear-gradient(180deg,#0b1220 0%, #0a0f1c 60%, #0b1220 100%);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial,"Noto Sans",sans-serif;line-height:1.55}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial,"Noto Sans",sans-serif;line-height:1.55}
   a{color:var(--accent)}
-  .container{max-width:1200px;margin:32px auto;padding:0 20px}
-  header{display:flex;gap:16px;align-items:center;margin-bottom:24px}
-  .logo{width:46px;height:46px;border-radius:12px;background:radial-gradient(120% 120% at 20% 20%, #7cc4ff 0%, #b892ff 40%, #111a2b 100%);box-shadow:0 10px 30px rgba(124,196,255,.25), inset 0 0 14px rgba(184,146,255,.3)}
-  h1{font-size:30px;margin:0;font-weight:800;letter-spacing:.2px}
+  .container{max-width:1100px;margin:24px auto;padding:0 16px}
+  header{display:flex;gap:16px;align-items:center;margin-bottom:20px}
+  .logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#2563eb,#7c3aed);box-shadow:0 6px 18px rgba(37,99,235,.25)}
+  h1{font-size:28px;margin:0;font-weight:700;letter-spacing:.2px;color:var(--ink)}
   .subtitle{color:var(--sub);margin-top:2px;font-weight:500}
   .grid{display:grid;gap:16px;grid-template-columns:repeat(12,1fr)}
-  .card{grid-column:span 12;background:linear-gradient(180deg,var(--panel), #0f172a);border:1px solid rgba(124,196,255,.15);border-radius:16px;padding:18px 20px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
-  .card h2{margin:2px 0 10px 0;font-size:20px;letter-spacing:.2px}
-  .card h3{margin:16px 0 8px 0;font-size:16px;color:#cbd5e1}
+  .card{grid-column:span 12;background:var(--panel);border:1px solid #e4e7ec;border-radius:14px;padding:18px 20px;box-shadow:0 8px 24px rgba(15,23,42,.08)}
+  .card h2{margin:2px 0 10px 0;font-size:20px;color:var(--ink)}
+  .card h3{margin:16px 0 8px 0;font-size:15px;color:var(--sub)}
   .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
-  .chip{background:var(--chip);color:var(--ink);padding:6px 12px;border-radius:999px;border:1px solid rgba(124,196,255,.18);font-size:12px}
-  code, pre{background:var(--code);color:#dbeafe;border-radius:10px}
-  pre{padding:14px;overflow:auto;border:1px solid rgba(124,196,255,.18);font-size:12px}
-  table{width:100%;border-collapse:separate;border-spacing:0 6px}
-  th,td{text-align:left;padding:8px 10px;font-size:13px}
-  th{color:#cbd5e1;font-weight:700;border-bottom:1px solid rgba(124,196,255,.25)}
-  tr{background:rgba(26,36,56,.65)}
+  .chip{background:var(--chip);color:var(--ink);padding:6px 12px;border-radius:999px;border:1px solid #d5dae1;font-size:12px;font-weight:600}
+  code, pre{background:var(--code);color:#0f172a;border-radius:10px}
+  pre{padding:14px;overflow:auto;border:1px solid #d5dae1;font-size:12px}
+  table{width:100%;border-collapse:separate;border-spacing:0 6px;background:#fefefe;border:1px solid #e4e7ec;border-radius:12px}
+  th{color:#475467;font-weight:700;border-bottom:1px solid #e4e7ec;background:#f3f6fb;padding:10px 12px;font-size:13px}
+  td{text-align:left;padding:10px 12px;font-size:13px;color:#1f2a37;background:#ffffff}
   tr td:first-child{border-top-left-radius:10px;border-bottom-left-radius:10px}
   tr td:last-child{border-top-right-radius:10px;border-bottom-right-radius:10px}
   .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
-  .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;font-weight:700}
-  .pill.ok{background:rgba(34,197,94,.12);color:#bbf7d0;border:1px solid rgba(34,197,94,.35)}
-  .pill.warn{background:rgba(250,204,21,.12);color:#fde68a;border:1px solid rgba(250,204,21,.35)}
-  .session-box{background:rgba(26,36,56,.8);border:1px solid rgba(124,196,255,.2);border-radius:12px;padding:14px}
-  .session-box h4{margin:0 0 8px 0;font-size:15px;color:#cbd5e1;font-weight:700}
-  .paper-badge{display:inline-block;padding:4px 8px;margin:3px;border-radius:6px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,.12)}
-  .paper-badge.cv{background:rgba(139,92,246,.2);color:#c4b5fd}
-  .paper-badge.nlp{background:rgba(245,158,11,.2);color:#fcd34d}
-  .paper-badge.sys{background:rgba(16,185,129,.2);color:#6ee7b7}
-  .paper-badge.rl{background:rgba(59,130,246,.2);color:#93c5fd}
-  .paper-badge.theory{background:rgba(236,72,153,.2);color:#f9a8d4}
-  .oral-badge{background:rgba(124,196,255,.15);color:#7cc4ff;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:600;margin-left:8px}
-  .poster-badge{background:rgba(184,146,255,.15);color:#b892ff;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:600;margin-left:8px}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;font-weight:700;font-size:12px;border:1px solid transparent}
+  .pill.ok{background:rgba(21,128,61,.12);color:#166534;border-color:rgba(21,128,61,.4)}
+  .pill.warn{background:rgba(180,83,9,.12);color:#92400e;border-color:rgba(180,83,9,.35)}
+  .session-box{background:#f4f7fb;border:1px solid #e4e7ec;border-radius:12px;padding:14px}
+  .session-box h4{margin:0 0 8px 0;font-size:15px;color:#1f2a37;font-weight:600}
+  .paper-badge{display:inline-block;padding:4px 8px;margin:3px;border-radius:6px;font-size:11px;font-weight:600;border:1px solid #d5dae1;background:#eef2ff;color:#3730a3}
+  .paper-badge.cv{background:#ede9fe;color:#4c1d95}
+  .paper-badge.nlp{background:#fef3c7;color:#92400e}
+  .paper-badge.sys{background:#d1fae5;color:#065f46}
+  .paper-badge.rl{background:#e0f2fe;color:#1d4ed8}
+  .paper-badge.theory{background:#fce7f3;color:#9d174d}
+  .oral-badge{background:#dbeafe;color:#1d4ed8;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:600;margin-left:8px}
+  .poster-badge{background:#e9d5ff;color:#7c3aed;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:600;margin-left:8px}
   .plan-flow{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;padding:0}
-  .plan-flow li{list-style:none;background:rgba(255,255,255,.04);padding:6px 12px;border-radius:999px;border:1px solid rgba(124,196,255,.18);font-size:12px}
-  .dag-svg rect.module{fill:rgba(17,26,43,.95);stroke:rgba(124,196,255,.6);stroke-width:2.5}
-  .dag-svg text{font-family:Inter,sans-serif}
+  .plan-flow li{list-style:none;background:#eef2ff;padding:6px 12px;border-radius:999px;border:1px solid #dbe4ff;font-size:12px;color:#1e3a8a}
+  .dag-svg rect.module{fill:#ffffff;stroke:#2563eb;stroke-width:2.2;filter:drop-shadow(0 2px 6px rgba(15,23,42,.12))}
+  .dag-svg text{font-family:Inter,sans-serif;fill:#1f2a37;font-weight:600}
   .trace-table{width:100%;margin-top:10px}
   .trace-table tr td{font-size:12px}
   details{margin-top:8px}
   summary{cursor:pointer;font-weight:600;color:var(--accent)}
-  footer{margin:30px 0 12px 0;color:#8aa2c8;font-size:12px;text-align:center}
+  footer{margin:24px 0 12px 0;color:#64748b;font-size:12px;text-align:center}
   @media (max-width: 900px){ .grid{grid-template-columns:1fr} }
 </style>
 
@@ -116,45 +115,37 @@ Patient Profile:
 - 62-year-old male
 - History: CVA, neurogenic bladder with indwelling suprapubic catheter
 - Multiple prior admissions for UTIs, altered mental status, and urosepsis
-- Current: Urosepsis (now resolved after vanc/meropenem treatment)
-- CT findings: Non-obstructing stone in left ureter, no urethral strictures
-- Medical history: Non-Hodgkins Marginal Zone Lymphoma (s/p R-CHOP x6), Bell&#x27;s Palsy, BPH, Hypertension, Partial bowel obstruction s/p colostomy, Hepatitis C, Cryoglobulinemia, SLE with transverse myelitis (anti-dsDNA Ab+), Insulin-dependent diabetes, Fungal esophagitis, Recurrent UTIs (Pseudomonas &amp; Enterococcus)
+- Current: Urosepsis due to monomicrobial multidrug-resistant E. coli (blood and urine cultures positive), now resolved after meropenem treatment
+- CT findings: Non-obstructing stone in left ureter, no obstructive uropathy or urethral strictures
+- Urinalysis: Positive for nitrites and leukocyte esterase, urine culture positive for MDR E. coli
 
+Exclusions: No renal abscess, not a renal transplant recipient
 Clinical Trial: NCT02142751
 Trial Criteria:
 Inclusion:
 - ≥18 years old hospitalized patients
 - Negative pregnancy test in fertile women
 - Episode of monomicrobial urinary BSI due to multidrug-resistant E.coli (susceptible to fosfomycin and meropenem or ceftriaxone)
-- Urinary sepsis with MDR E.coli from blood cultures, requires:
-  Clinical criteria (at least one): UTI symptoms (dysuria, urgency, suprapubic pain, pollakiuria), lumbar back pain, costovertebral angle tenderness, altered mental status (≤70 years), intermittent/permanent indwelling Foley catheter
-  Urinalysis criteria (at least one): Positive dipstick for nitrites or leukocyte esterase, positive urine culture
+- Urinary sepsis with MDR E.coli from blood cultures, requires Urinalysis criteria (at least one): Positive dipstick for nitrites or leukocyte esterase, positive urine culture
 
 Exclusion criteria:
 - Polymicrobial bacteremia
 - Undrained renal abscess or unresolved obstructive uropathy
 - Pregnant or breastfeeding women
-- Hematogenous infection
-- Other concomitant infection
 - Renal transplant recipients
-- Polycystic kidney
-- Hypersensitivity to meropenem, fosfomycin, or ceftriaxone
 
 Based on the available information, can this patient be enrolled in the trial?
-A) Yes
+A) Yes 
 B) No
 
 HOSPITAL CREDENTIALING VERIFICATION:
 Excerpt from Hospital Policy Manual Section - Staff Credentialing Requirements:
-- All hospital staff members shall be classified as either clinical staff or administrative staff.
-- All personnel who provide direct patient care services are classified as clinical staff.
-- No staff members classified as administrative staff provide direct patient care services.
-- All staff who are classified as clinical staff must complete annual infection control training to receive credentialing authorization.
-- All staff who are classified as clinical staff must complete annual HIPAA certification to receive credentialing authorization.
-- No billing clerks are classified as clinical staff.
-- All registered nurses provide direct patient care services.
-- No staff who have not completed annual infection control training are credentialed.
-- No staff who have not completed annual HIPAA certification are credentialed.
+- All hospital staff are classified as either clinical staff or administrative staff.
+- All personnel who provide direct patient care are clinical staff.
+- No clinical staff is credentialed if they have not completed annual infection control training.
+- No clinical staff is credentialed if they have not completed annual HIPAA certification.
+- No administrative staff provide direct patient care.
+- All registered nurses provide direct patient care.
 
 Personnel Record for Johnson, R.N.:
 - Position: Registered Nurse
@@ -166,15 +157,16 @@ B) No
 
 DISCHARGE READINESS VERIFICATION:
 Patient Discharge Protocol - Standard Operating Procedure:
-- If a patient has stable vital signs, then the patient meets vital stability criteria.
-- If a patient is off IV antibiotics, then the patient meets antibiotic transition criteria.
-- If a patient meets vital stability criteria and meets antibiotic transition criteria, then the patient is medically stable.
+- If a patient has stable vital signs, then the patient is medically stable.
 - If a patient can perform self-care activities, then the patient is functionally independent.
-- If a patient is functionally independent and has completed discharge teaching, then the patient meets discharge education requirements.
-- If a patient is medically stable and meets discharge education requirements, then the patient is cleared for discharge.
+- If a patient is medically stable and has no new symptoms, then the patient is ready for discharge evaluation.
+- If a patient is functionally independent and has completed discharge teaching, then the patient is cleared for discharge.
 
 Patient Status Report - Chen, Margaret (MRN: 445821):
-Margaret Chen has stable vital signs. Margaret Chen is off IV antibiotics. Margaret Chen can perform self-care activities. Margaret Chen has completed discharge teaching.
+- Margaret Chen has stable vital signs. 
+- Margaret Chen can perform self-care activities. 
+- Margaret Chen has completed discharge teaching. 
+- Margaret Chen has no new symptoms.
 
 Based on this discharge protocol, is Margaret Chen cleared for discharge?
 A) Yes
@@ -192,7 +184,7 @@ B) No</pre>
       <div class="svg-wrap" style="margin-bottom:16px">
         <svg class="dag-svg" viewBox='0 0 900 880' width='100%' height='100%' role='img' aria-label='Adaptive routing workflow'>
           <defs><marker id='arrow_0' markerWidth='12' markerHeight='12' refX='9' refY='4' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,8 L10,4 z' fill='#7cc4ff' /></marker><marker id='arrow_1' markerWidth='12' markerHeight='12' refX='9' refY='4' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,8 L10,4 z' fill='#b892ff' /></marker><marker id='arrow_2' markerWidth='12' markerHeight='12' refX='9' refY='4' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,8 L10,4 z' fill='#4ade80' /></marker><marker id='arrow_3' markerWidth='12' markerHeight='12' refX='9' refY='4' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,8 L10,4 z' fill='#facc15' /></marker><marker id='arrow_4' markerWidth='12' markerHeight='12' refX='9' refY='4' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,8 L10,4 z' fill='#fb7185' /></marker><marker id='arrow_5' markerWidth='12' markerHeight='12' refX='9' refY='4' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,8 L10,4 z' fill='#38bdf8' /></marker><marker id='arrow_6' markerWidth='12' markerHeight='12' refX='9' refY='4' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,8 L10,4 z' fill='#f472b6' /></marker><marker id='arrow_7' markerWidth='12' markerHeight='12' refX='9' refY='4' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,8 L10,4 z' fill='#a3e635' /></marker></defs>
-          <line x1='403.97727272727275' y1='212.0' x2='271.02272727272725' y2='316.0' stroke='#7cc4ff' stroke-width='2.2' marker-end='url(#arrow_0)' /><line x1='450.0' y1='212.0' x2='450.0' y2='316.0' stroke='#7cc4ff' stroke-width='2.2' marker-end='url(#arrow_0)' /><line x1='496.02272727272725' y1='212.0' x2='628.9772727272727' y2='316.0' stroke='#7cc4ff' stroke-width='2.2' marker-end='url(#arrow_0)' /><line x1='675.0' y1='388.0' x2='675.0' y2='492.0' stroke='#facc15' stroke-width='2.2' marker-end='url(#arrow_3)' /><line x1='450.0' y1='388.0' x2='450.0' y2='492.0' stroke='#4ade80' stroke-width='2.2' marker-end='url(#arrow_2)' /><line x1='225.0' y1='388.0' x2='225.0' y2='492.0' stroke='#b892ff' stroke-width='2.2' marker-end='url(#arrow_1)' /><line x1='628.9772727272727' y1='564.0' x2='496.02272727272725' y2='668.0' stroke='#f472b6' stroke-width='2.2' marker-end='url(#arrow_6)' /><line x1='450.0' y1='564.0' x2='450.0' y2='668.0' stroke='#38bdf8' stroke-width='2.2' marker-end='url(#arrow_5)' /><line x1='271.02272727272725' y1='564.0' x2='403.97727272727275' y2='668.0' stroke='#fb7185' stroke-width='2.2' marker-end='url(#arrow_4)' />
+          <line x1='403.97727272727275' y1='212.0' x2='271.02272727272725' y2='316.0' stroke='#7cc4ff' stroke-width='2.2' marker-end='url(#arrow_0)' /><line x1='450.0' y1='212.0' x2='450.0' y2='316.0' stroke='#7cc4ff' stroke-width='2.2' marker-end='url(#arrow_0)' /><line x1='496.02272727272725' y1='212.0' x2='628.9772727272727' y2='316.0' stroke='#7cc4ff' stroke-width='2.2' marker-end='url(#arrow_0)' /><line x1='675.0' y1='388.0' x2='675.0' y2='492.0' stroke='#facc15' stroke-width='2.2' marker-end='url(#arrow_3)' /><line x1='628.9772727272727' y1='564.0' x2='496.02272727272725' y2='668.0' stroke='#f472b6' stroke-width='2.2' marker-end='url(#arrow_6)' /><line x1='450.0' y1='388.0' x2='450.0' y2='492.0' stroke='#4ade80' stroke-width='2.2' marker-end='url(#arrow_2)' /><line x1='450.0' y1='564.0' x2='450.0' y2='668.0' stroke='#38bdf8' stroke-width='2.2' marker-end='url(#arrow_5)' /><line x1='225.0' y1='388.0' x2='225.0' y2='492.0' stroke='#b892ff' stroke-width='2.2' marker-end='url(#arrow_1)' /><line x1='271.02272727272725' y1='564.0' x2='403.97727272727275' y2='668.0' stroke='#fb7185' stroke-width='2.2' marker-end='url(#arrow_4)' />
           <g class="dag-node"><rect class='module' x='390.0' y='140.0' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='#7cc4ff' stroke-width='2.5' /><text x='450.0' y='182.0' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>&lt;PLAN_START&gt;</text></g><g class="dag-node"><rect class='module' x='165.0' y='316.0' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='#b892ff' stroke-width='2.5' /><text x='225.0' y='358.0' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>ques_3</text></g><g class="dag-node"><rect class='module' x='390.0' y='316.0' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='#4ade80' stroke-width='2.5' /><text x='450.0' y='358.0' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>ques_2</text></g><g class="dag-node"><rect class='module' x='615.0' y='316.0' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='#facc15' stroke-width='2.5' /><text x='675.0' y='358.0' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>ques_1</text></g><g class="dag-node"><rect class='module' x='165.0' y='492.0' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='#fb7185' stroke-width='2.5' /><text x='225.0' y='534.0' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>lp_solver</text></g><g class="dag-node"><rect class='module' x='390.0' y='492.0' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='#38bdf8' stroke-width='2.5' /><text x='450.0' y='534.0' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>fol_solver</text></g><g class="dag-node"><rect class='module' x='615.0' y='492.0' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='#f472b6' stroke-width='2.5' /><text x='675.0' y='534.0' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>smt_solver</text></g><g class="dag-node"><rect class='module' x='390.0' y='668.0' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='#a3e635' stroke-width='2.5' /><text x='450.0' y='710.0' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>&lt;PLAN_END&gt;</text></g>
         </svg>
       </div>
@@ -201,7 +193,7 @@ B) No</pre>
         <thead><tr><th>Agent</th><th>Goal</th></tr></thead>
         <tbody><tr><td>&lt;PLAN_START&gt;</td><td>Special control marker, indicating the start of the whole working plan.</td></tr><tr><td>ques_3</td><td>Virtual agent representing ques_3</td></tr><tr><td>ques_2</td><td>Virtual agent representing ques_2</td></tr><tr><td>ques_1</td><td>Virtual agent representing ques_1</td></tr><tr><td>lp_solver</td><td>Determine whether a hypothesis can be derived from the given facts and rules using logical deduction..</td></tr><tr><td>fol_solver</td><td>A theorem prover specialized for problems expressed in first-order logic (FOL). It is capable of handling complex reasoning tasks that involve quantifiers, predicates, and relationships among multiple entities.</td></tr><tr><td>smt_solver</td><td>A boolean satisfiability (SAT) solver designed to verify whether all logical constraints in a system are simultaneously satisfied. It is particularly effective for analytical reasoning tasks that involve checking whether a given configuration fulfills complex sets of conditions.</td></tr><tr><td>&lt;PLAN_END&gt;</td><td>Special control marker, indicating the end of the whole working plan.</td></tr></tbody>
       </table>
-      <div class="small" style="margin-top:8px">Edges: &lt;PLAN_START&gt;-&gt;ques_3<br>&lt;PLAN_START&gt;-&gt;ques_2<br>&lt;PLAN_START&gt;-&gt;ques_1<br>ques_1-&gt;smt_solver<br>ques_2-&gt;fol_solver<br>ques_3-&gt;lp_solver<br>smt_solver-&gt;&lt;PLAN_END&gt;<br>fol_solver-&gt;&lt;PLAN_END&gt;<br>lp_solver-&gt;&lt;PLAN_END&gt;</div>
+      <div class="small" style="margin-top:8px">Edges: &lt;PLAN_START&gt;-&gt;ques_3<br>&lt;PLAN_START&gt;-&gt;ques_2<br>&lt;PLAN_START&gt;-&gt;ques_1<br>ques_1-&gt;smt_solver<br>smt_solver-&gt;&lt;PLAN_END&gt;<br>ques_2-&gt;fol_solver<br>fol_solver-&gt;&lt;PLAN_END&gt;<br>ques_3-&gt;lp_solver<br>lp_solver-&gt;&lt;PLAN_END&gt;</div>
     </div>
   </section>
 
@@ -224,89 +216,71 @@ html
 ; Declare variables and their types
 (declare-const age Int)
 (declare-const is_male Bool)
-(declare-const pregnancy_test_negative Bool)
-(declare-const has_monomicrobial_urinary_bsi Bool)
-(declare-const resistant_to_multiple_drugs Bool)
-(declare-const susceptible_to_fosfomycin Bool)
-(declare-const susceptible_to_meropenem Bool)
-(declare-const susceptible_to_ceftriaxone Bool)
-(declare-const has_uti_symptoms Bool)
-(declare-const has_lumbar_back_pain Bool)
-(declare-const has_cvat Bool) ; costovertebral angle tenderness
-(declare-const has_altered_mental_status Bool)
-(declare-const has_indwelling_catheter Bool)
-(declare-const positive_nitrites Bool)
-(declare-const positive_leukocyte_esterase Bool)
-(declare-const positive_urine_culture Bool)
-(declare-const has_polymicrobial_bacteremia Bool)
+(declare-const has_cva_history Bool)
+(declare-const has_neurogenic_bladder Bool)
+(declare-const has_urinary_sepsis Bool)
+(declare-const mdr_ecoli_infection Bool)
+(declare-const treatment_with_meropenem Bool)
+(declare-const has_stone_in_ureter Bool)
+(declare-const has_obstructive_uropathy Bool)
+(declare-const has_urethral_strictures Bool)
+(declare-const urine_positive_for_nitrites Bool)
+(declare-const urine_positive_for_leukocyte_esterase Bool)
+(declare-const positive_urine_culture_for_mdr_ecoli Bool)
 (declare-const has_renal_abscess Bool)
-(declare-const unresolved_obstructive_uropathy Bool)
-(declare-const is_pregnant_or_breastfeeding Bool)
-(declare-const has_hematogenous_infection Bool)
-(declare-const has_other_concomitant_infections Bool)
 (declare-const is_renal_transplant_recipient Bool)
-(declare-const has_polycystic_kidney Bool)
-(declare-const hypersensitive_to_meropenem Bool)
-(declare-const hypersensitive_to_fosfomycin Bool)
-(declare-const hypersensitive_to_ceftriaxone Bool)
+(declare-const is_pregnant_or_breastfeeding Bool)
+(declare-const has_polymicrobial_bacteremia Bool)
 
-; Inclusion criteria: Declare the inclusion logic
+; Define trial specific conditions
+(define-fun eligible_age () Bool
+  (>= age 18))
+
+(define-fun urinary_bsi_with_mdr_ecoli () Bool
+  (and has_urinary_sepsis 
+       mdr_ecoli_infection))
+
+(define-fun urinalysis_criteria () Bool
+  (or urine_positive_for_nitrites 
+      urine_positive_for_leukocyte_esterase
+      positive_urine_culture_for_mdr_ecoli))
+
+; Assert inclusion criteria
 (assert (and
-    (>= age 18)
-    pregnancy_test_negative
-    has_monomicrobial_urinary_bsi
-    resistant_to_multiple_drugs
-    (or susceptible_to_fosfomycin susceptible_to_meropenem susceptible_to_ceftriaxone)
-    (or has_uti_symptoms has_lumbar_back_pain has_cvat has_altered_mental_status has_indwelling_catheter)
-    (or positive_nitrites positive_leukocyte_esterase positive_urine_culture)
+  eligible_age
+  is_male
+  urinary_bsi_with_mdr_ecoli
+  urinalysis_criteria
 ))
 
-; Exclusion criteria: Declare the exclusion logic
+; Assert exclusion criteria
 (assert (not (or
-    has_polymicrobial_bacteremia
-    has_renal_abscess
-    unresolved_obstructive_uropathy
-    is_pregnant_or_breastfeeding
-    has_hematogenous_infection
-    has_other_concomitant_infections
-    is_renal_transplant_recipient
-    has_polycystic_kidney
-    hypersensitive_to_meropenem
-    hypersensitive_to_fosfomycin
-    hypersensitive_to_ceftriaxone
+  has_polymicrobial_bacteremia
+  has_renal_abscess
+  is_pregnant_or_breastfeeding
+  is_renal_transplant_recipient
 )))
 
-; Patient Profile Assignments
+; Instance assignments (Patient Profile)
 (assert (= age 62))
 (assert (= is_male true))
-(assert (= pregnancy_test_negative true))
-(assert (= has_monomicrobial_urinary_bsi true))
-(assert (= resistant_to_multiple_drugs true))
-; Assuming susceptibility based on trial information
-(assert (= susceptible_to_fosfomycin true))
-(assert (= susceptible_to_meropenem true))
-(assert (= susceptible_to_ceftriaxone false))
-(assert (= has_uti_symptoms true))
-(assert (= has_lumbar_back_pain false))
-(assert (= has_cvat false))
-(assert (= has_altered_mental_status true))
-(assert (= has_indwelling_catheter true))
-(assert (= positive_nitrites true))
-(assert (= positive_leukocyte_esterase false))
-(assert (= positive_urine_culture true))
-(assert (= has_polymicrobial_bacteremia false))
+(assert (= has_cva_history true))
+(assert (= has_neurogenic_bladder true))
+(assert (= has_urinary_sepsis true))
+(assert (= mdr_ecoli_infection true))
+(assert (= treatment_with_meropenem true))
+(assert (= has_stone_in_ureter true))
+(assert (= has_obstructive_uropathy false))
+(assert (= has_urethral_strictures false))
+(assert (= urine_positive_for_nitrites true))
+(assert (= urine_positive_for_leukocyte_esterase true))
+(assert (= positive_urine_culture_for_mdr_ecoli true))
 (assert (= has_renal_abscess false))
-(assert (= unresolved_obstructive_uropathy false))
-(assert (= is_pregnant_or_breastfeeding false))
-(assert (= has_hematogenous_infection false))
-(assert (= has_other_concomitant_infections false))
 (assert (= is_renal_transplant_recipient false))
-(assert (= has_polycystic_kidney false))
-(assert (= hypersensitive_to_meropenem false))
-(assert (= hypersensitive_to_fosfomycin false))
-(assert (= hypersensitive_to_ceftriaxone false))
+(assert (= is_pregnant_or_breastfeeding false))
+(assert (= has_polymicrobial_bacteremia false))
 
-; Check satisfiability
+; Check if the patient is eligible for the trial
 (check-sat)
     </pre>
   </div>
@@ -317,39 +291,39 @@ html
     <h2>Verification</h2>
     <table>
       <tr>
-        <th>Criteria</th>
+        <th>Condition</th>
         <th>Status</th>
       </tr>
       <tr>
-        <td>Age ≥ 18</td>
+        <td>Eligible Age (≥18)</td>
         <td class="pill ok">Satisfied</td>
       </tr>
       <tr>
-        <td>Negative pregnancy test</td>
+        <td>Male</td>
         <td class="pill ok">Satisfied</td>
       </tr>
       <tr>
-        <td>Monomicrobial urinary BSI</td>
+        <td>Urinary BSI with MDR E.coli</td>
         <td class="pill ok">Satisfied</td>
       </tr>
       <tr>
-        <td>Resistant to multiple drugs</td>
+        <td>Urinalysis Criteria</td>
         <td class="pill ok">Satisfied</td>
       </tr>
       <tr>
-        <td>Susceptible to fosfomycin or meropenem</td>
+        <td>No Polymicrobial Bacteremia</td>
         <td class="pill ok">Satisfied</td>
       </tr>
       <tr>
-        <td>UTI symptoms or other clinical criteria</td>
+        <td>No Renal Abscess</td>
         <td class="pill ok">Satisfied</td>
       </tr>
       <tr>
-        <td>Positive urinalysis criteria</td>
+        <td>Not Pregnant/Breastfeeding</td>
         <td class="pill ok">Satisfied</td>
       </tr>
       <tr>
-        <td>No exclusion criteria met</td>
+        <td>Not Renal Transplant Recipient</td>
         <td class="pill ok">Satisfied</td>
       </tr>
     </table>
@@ -360,100 +334,82 @@ html
   <div class="card" style="grid-column:span 12">
     <h2>Interpretation</h2>
     <div class="callout">
-      The SMT solver verified that the patient meets all inclusion criteria and none of the exclusion criteria for the clinical trial. The formal code ensures that each logical condition is checked rigorously, providing a trustworthy decision that the patient is eligible for enrollment.
+      The SMT solver verified that all inclusion criteria are met and none of the exclusion criteria apply to the patient. The formal code above shows the logical assertions and checks performed to ensure the patient's eligibility for the clinical trial. This guarantees the decision is based on rigorous logical evaluation.
     </div>
   </div>
 </section>
 
   <section class="grid" style="margin-top:8px">
     <div class="card" style="grid-column:span 12">
-      <h2>ques_1 · Code (smt_solver)</h2>
+      <h2>Clinical Trial Enrollment · Code (smt_solver)</h2>
       <pre>; Declare variables and their types
 (declare-const age Int)
 (declare-const is_male Bool)
-(declare-const pregnancy_test_negative Bool)
-(declare-const has_monomicrobial_urinary_bsi Bool)
-(declare-const resistant_to_multiple_drugs Bool)
-(declare-const susceptible_to_fosfomycin Bool)
-(declare-const susceptible_to_meropenem Bool)
-(declare-const susceptible_to_ceftriaxone Bool)
-(declare-const has_uti_symptoms Bool)
-(declare-const has_lumbar_back_pain Bool)
-(declare-const has_cvat Bool) ; costovertebral angle tenderness
-(declare-const has_altered_mental_status Bool)
-(declare-const has_indwelling_catheter Bool)
-(declare-const positive_nitrites Bool)
-(declare-const positive_leukocyte_esterase Bool)
-(declare-const positive_urine_culture Bool)
-(declare-const has_polymicrobial_bacteremia Bool)
+(declare-const has_cva_history Bool)
+(declare-const has_neurogenic_bladder Bool)
+(declare-const has_urinary_sepsis Bool)
+(declare-const mdr_ecoli_infection Bool)
+(declare-const treatment_with_meropenem Bool)
+(declare-const has_stone_in_ureter Bool)
+(declare-const has_obstructive_uropathy Bool)
+(declare-const has_urethral_strictures Bool)
+(declare-const urine_positive_for_nitrites Bool)
+(declare-const urine_positive_for_leukocyte_esterase Bool)
+(declare-const positive_urine_culture_for_mdr_ecoli Bool)
 (declare-const has_renal_abscess Bool)
-(declare-const unresolved_obstructive_uropathy Bool)
-(declare-const is_pregnant_or_breastfeeding Bool)
-(declare-const has_hematogenous_infection Bool)
-(declare-const has_other_concomitant_infections Bool)
 (declare-const is_renal_transplant_recipient Bool)
-(declare-const has_polycystic_kidney Bool)
-(declare-const hypersensitive_to_meropenem Bool)
-(declare-const hypersensitive_to_fosfomycin Bool)
-(declare-const hypersensitive_to_ceftriaxone Bool)
+(declare-const is_pregnant_or_breastfeeding Bool)
+(declare-const has_polymicrobial_bacteremia Bool)
 
-; Inclusion criteria: Declare the inclusion logic
+; Define trial specific conditions
+(define-fun eligible_age () Bool
+  (&gt;= age 18))
+
+(define-fun urinary_bsi_with_mdr_ecoli () Bool
+  (and has_urinary_sepsis 
+       mdr_ecoli_infection))
+
+(define-fun urinalysis_criteria () Bool
+  (or urine_positive_for_nitrites 
+      urine_positive_for_leukocyte_esterase
+      positive_urine_culture_for_mdr_ecoli))
+
+; Assert inclusion criteria
 (assert (and
-    (&gt;= age 18)
-    pregnancy_test_negative
-    has_monomicrobial_urinary_bsi
-    resistant_to_multiple_drugs
-    (or susceptible_to_fosfomycin susceptible_to_meropenem susceptible_to_ceftriaxone)
-    (or has_uti_symptoms has_lumbar_back_pain has_cvat has_altered_mental_status has_indwelling_catheter)
-    (or positive_nitrites positive_leukocyte_esterase positive_urine_culture)
+  eligible_age
+  is_male
+  urinary_bsi_with_mdr_ecoli
+  urinalysis_criteria
 ))
 
-; Exclusion criteria: Declare the exclusion logic
+; Assert exclusion criteria
 (assert (not (or
-    has_polymicrobial_bacteremia
-    has_renal_abscess
-    unresolved_obstructive_uropathy
-    is_pregnant_or_breastfeeding
-    has_hematogenous_infection
-    has_other_concomitant_infections
-    is_renal_transplant_recipient
-    has_polycystic_kidney
-    hypersensitive_to_meropenem
-    hypersensitive_to_fosfomycin
-    hypersensitive_to_ceftriaxone
+  has_polymicrobial_bacteremia
+  has_renal_abscess
+  is_pregnant_or_breastfeeding
+  is_renal_transplant_recipient
 )))
 
-; Patient Profile Assignments
+; Instance assignments (Patient Profile)
 (assert (= age 62))
 (assert (= is_male true))
-(assert (= pregnancy_test_negative true))
-(assert (= has_monomicrobial_urinary_bsi true))
-(assert (= resistant_to_multiple_drugs true))
-; Assuming susceptibility based on trial information
-(assert (= susceptible_to_fosfomycin true))
-(assert (= susceptible_to_meropenem true))
-(assert (= susceptible_to_ceftriaxone false))
-(assert (= has_uti_symptoms true))
-(assert (= has_lumbar_back_pain false))
-(assert (= has_cvat false))
-(assert (= has_altered_mental_status true))
-(assert (= has_indwelling_catheter true))
-(assert (= positive_nitrites true))
-(assert (= positive_leukocyte_esterase false))
-(assert (= positive_urine_culture true))
-(assert (= has_polymicrobial_bacteremia false))
+(assert (= has_cva_history true))
+(assert (= has_neurogenic_bladder true))
+(assert (= has_urinary_sepsis true))
+(assert (= mdr_ecoli_infection true))
+(assert (= treatment_with_meropenem true))
+(assert (= has_stone_in_ureter true))
+(assert (= has_obstructive_uropathy false))
+(assert (= has_urethral_strictures false))
+(assert (= urine_positive_for_nitrites true))
+(assert (= urine_positive_for_leukocyte_esterase true))
+(assert (= positive_urine_culture_for_mdr_ecoli true))
 (assert (= has_renal_abscess false))
-(assert (= unresolved_obstructive_uropathy false))
-(assert (= is_pregnant_or_breastfeeding false))
-(assert (= has_hematogenous_infection false))
-(assert (= has_other_concomitant_infections false))
 (assert (= is_renal_transplant_recipient false))
-(assert (= has_polycystic_kidney false))
-(assert (= hypersensitive_to_meropenem false))
-(assert (= hypersensitive_to_fosfomycin false))
-(assert (= hypersensitive_to_ceftriaxone false))
+(assert (= is_pregnant_or_breastfeeding false))
+(assert (= has_polymicrobial_bacteremia false))
 
-; Check satisfiability
+; Check if the patient is eligible for the trial
 (check-sat)</pre>
     </div>
   </section>
@@ -472,51 +428,42 @@ html
 <section class="grid" style="margin-top:8px">
   <div class="card" style="grid-column:span 12">
     <h2>Problem-Specific Visualization</h2>
-    <h3>Proof Steps</h3>
     <table>
       <tr>
         <th>Step</th>
         <th>Logical Notation</th>
       </tr>
       <tr>
-        <td>1</td>
-        <td>∀x ((ClinicalStaff(x) ∨ AdministrativeStaff(x)) ∧ ¬(ClinicalStaff(x) ∧ AdministrativeStaff(x)))</td>
+        <td>Premise 1</td>
+        <td class="mono small">∀x (ClinicalStaff(x) ∨ AdministrativeStaff(x))</td>
       </tr>
       <tr>
-        <td>2</td>
-        <td>∀x (ProvideCare(x) → ClinicalStaff(x))</td>
+        <td>Premise 2</td>
+        <td class="mono small">∀x (DirectCare(x) → ClinicalStaff(x))</td>
       </tr>
       <tr>
-        <td>3</td>
-        <td>∀x (AdministrativeStaff(x) → ¬ProvideCare(x))</td>
+        <td>Premise 3</td>
+        <td class="mono small">∀x (ClinicalStaff(x) ∧ ¬InfectionTraining(x) → ¬Credentialed(x))</td>
       </tr>
       <tr>
-        <td>4</td>
-        <td>∀x (ClinicalStaff(x) → CompleteInfectionControlTraining(x) ∧ CompleteHIPAACertification(x) → Credentialed(x))</td>
+        <td>Premise 4</td>
+        <td class="mono small">∀x (ClinicalStaff(x) ∧ ¬HIPAACert(x) → ¬Credentialed(x))</td>
       </tr>
       <tr>
-        <td>5</td>
-        <td>∀x (BillingClerk(x) → ¬ClinicalStaff(x))</td>
+        <td>Premise 5</td>
+        <td class="mono small">∀x (AdministrativeStaff(x) → ¬DirectCare(x))</td>
       </tr>
       <tr>
-        <td>6</td>
-        <td>∀x (RegisteredNurse(x) → ProvideCare(x))</td>
+        <td>Premise 6</td>
+        <td class="mono small">∀x (RegisteredNurse(x) → DirectCare(x))</td>
       </tr>
       <tr>
-        <td>7</td>
-        <td>∀x (¬CompleteInfectionControlTraining(x) → ¬Credentialed(x))</td>
-      </tr>
-      <tr>
-        <td>8</td>
-        <td>∀x (¬CompleteHIPAACertification(x) → ¬Credentialed(x))</td>
-      </tr>
-      <tr>
-        <td>9</td>
-        <td>RegisteredNurse(johnson) ∧ CompleteInfectionControlTraining(johnson) ∧ ¬CompleteHIPAACertification(johnson)</td>
+        <td>Personnel Record</td>
+        <td class="mono small">RegisteredNurse(johnson) ∧ InfectionTraining(johnson) ∧ ¬HIPAACert(johnson)</td>
       </tr>
       <tr>
         <td>Conclusion</td>
-        <td>¬Credentialed(johnson)</td>
+        <td class="mono small">¬Credentialed(johnson)</td>
       </tr>
     </table>
   </div>
@@ -525,7 +472,24 @@ html
 <section class="grid" style="margin-top:8px">
   <div class="card" style="grid-column:span 12">
     <h2>Verification</h2>
-    <p class="mono small">The conclusion ¬Credentialed(johnson) logically follows from the premises, confirming that Nurse Johnson is not credentialed due to incomplete HIPAA certification.</p>
+    <table>
+      <tr>
+        <th>Constraint</th>
+        <th>Satisfied</th>
+      </tr>
+      <tr>
+        <td>Clinical staff must complete annual HIPAA certification</td>
+        <td class="pill no">No</td>
+      </tr>
+      <tr>
+        <td>Registered nurses provide direct patient care</td>
+        <td class="pill ok">Yes</td>
+      </tr>
+      <tr>
+        <td>Personnel record matches premises</td>
+        <td class="pill ok">Yes</td>
+      </tr>
+    </table>
   </div>
 </section>
 
@@ -533,52 +497,49 @@ html
   <div class="card" style="grid-column:span 12">
     <h2>Interpretation</h2>
     <div class="callout">
-      The formal logic proof demonstrates that Nurse Johnson, despite being a registered nurse and completing infection control training, is not credentialed because she did not complete the required HIPAA certification. This conclusion is derived from the hospital's credentialing requirements, ensuring that all logical conditions are satisfied.
+      Nurse Johnson is classified as clinical staff because registered nurses provide direct patient care. However, due to the lack of completed annual HIPAA certification, the system correctly concludes that Johnson is not credentialed. The formal code verifies this conclusion using logical predicates and premises.
     </div>
   </div>
 </section>
 
   <section class="grid" style="margin-top:8px">
     <div class="card" style="grid-column:span 12">
-      <h2>ques_2 · Formalization (fol_solver)</h2>
+      <h2>Credential Compliance · Formalization (fol_solver)</h2>
       <pre>Predicates:
 ClinicalStaff(x) ::: x is classified as clinical staff.
 AdministrativeStaff(x) ::: x is classified as administrative staff.
-ProvideCare(x) ::: x provides direct patient care services.
-CompleteInfectionControlTraining(x) ::: x completes annual infection control training.
-CompleteHIPAACertification(x) ::: x completes annual HIPAA certification.
+DirectCare(x) ::: x provides direct patient care.
 Credentialed(x) ::: x is credentialed.
-BillingClerk(x) ::: x is a billing clerk.
+InfectionTraining(x) ::: x has completed annual infection control training.
+HIPAACert(x) ::: x has completed annual HIPAA certification.
 RegisteredNurse(x) ::: x is a registered nurse.
 
 Premises:
-∀x ((ClinicalStaff(x) ∨ AdministrativeStaff(x)) ∧ ¬(ClinicalStaff(x) ∧ AdministrativeStaff(x))) ::: All hospital staff members shall be classified as either clinical staff or administrative staff.
-∀x (ProvideCare(x) → ClinicalStaff(x)) ::: All personnel who provide direct patient care services are classified as clinical staff.
-∀x (AdministrativeStaff(x) → ¬ProvideCare(x)) ::: No staff members classified as administrative staff provide direct patient care services.
-∀x (ClinicalStaff(x) → CompleteInfectionControlTraining(x) ∧ CompleteHIPAACertification(x) → Credentialed(x)) ::: All staff who are classified as clinical staff must complete annual infection control training and annual HIPAA certification to receive credentialing authorization.
-∀x (BillingClerk(x) → ¬ClinicalStaff(x)) ::: No billing clerks are classified as clinical staff.
-∀x (RegisteredNurse(x) → ProvideCare(x)) ::: All registered nurses provide direct patient care services.
-∀x (¬CompleteInfectionControlTraining(x) → ¬Credentialed(x)) ::: No staff who have not completed annual infection control training are credentialed.
-∀x (¬CompleteHIPAACertification(x) → ¬Credentialed(x)) ::: No staff who have not completed annual HIPAA certification are credentialed.
-RegisteredNurse(johnson) ∧ CompleteInfectionControlTraining(johnson) ∧ ¬CompleteHIPAACertification(johnson) ::: Johnson is a registered nurse who completed annual infection control training and did not complete annual HIPAA certification.
+∀x (ClinicalStaff(x) ∨ AdministrativeStaff(x)) ::: All hospital staff are classified as either clinical staff or administrative staff.
+∀x (DirectCare(x) → ClinicalStaff(x)) ::: All personnel who provide direct patient care are clinical staff.
+∀x (ClinicalStaff(x) ∧ ¬InfectionTraining(x) → ¬Credentialed(x)) ::: No clinical staff is credentialed if they have not completed annual infection control training.
+∀x (ClinicalStaff(x) ∧ ¬HIPAACert(x) → ¬Credentialed(x)) ::: No clinical staff is credentialed if they have not completed annual HIPAA certification.
+∀x (AdministrativeStaff(x) → ¬DirectCare(x)) ::: No administrative staff provide direct patient care.
+∀x (RegisteredNurse(x) → DirectCare(x)) ::: All registered nurses provide direct patient care.
+RegisteredNurse(johnson) ∧ InfectionTraining(johnson) ∧ ¬HIPAACert(johnson) ::: Personnel Record for Johnson, R.N.: Position: Registered Nurse; Mandatory Compliance Status: Annual infection control training completed; Annual HIPAA certification not completed.
 
 Conclusions:
-¬Credentialed(johnson) ::: Nurse Johnson is not credentialed.</pre>
+¬Credentialed(johnson) ::: According to the system, Nurse Johnson is not credentialed.</pre>
     </div>
   </section>
 
 
   <section class="grid" style="margin-top:8px">
     <div class="card" style="grid-column:span 12">
-      <h2>ques_2 · Premises (fol_solver)</h2>
-      <pre>[&#x27;all x.(((ClinicalStaff(x)) | (AdministrativeStaff(x))) &amp; (not ((ClinicalStaff(x)) &amp; (AdministrativeStaff(x)))))&#x27;, &#x27;all x.((ProvideCare(x)) -&gt; (ClinicalStaff(x)))&#x27;, &#x27;all x.((AdministrativeStaff(x)) -&gt; (not ProvideCare(x)))&#x27;, &#x27;all x.((((ClinicalStaff(x)) -&gt; (CompleteInfectionControlTraining(x))) &amp; (CompleteHIPAACertification(x))) -&gt; (Credentialed(x)))&#x27;, &#x27;all x.((BillingClerk(x)) -&gt; (not ClinicalStaff(x)))&#x27;, &#x27;all x.((RegisteredNurse(x)) -&gt; (ProvideCare(x)))&#x27;, &#x27;all x.((not CompleteInfectionControlTraining(x)) -&gt; (not Credentialed(x)))&#x27;, &#x27;all x.((not CompleteHIPAACertification(x)) -&gt; (not Credentialed(x)))&#x27;, &#x27;((RegisteredNurse(Johnson)) &amp; (CompleteInfectionControlTraining(Johnson))) &amp; (not CompleteHIPAACertification(Johnson))&#x27;]</pre>
+      <h2>Credential Compliance · Premises (fol_solver)</h2>
+      <pre>[&#x27;all x.((ClinicalStaff(x)) | (AdministrativeStaff(x)))&#x27;, &#x27;all x.((DirectCare(x)) -&gt; (ClinicalStaff(x)))&#x27;, &#x27;all x.(((ClinicalStaff(x)) &amp; (not InfectionTraining(x))) -&gt; (not Credentialed(x)))&#x27;, &#x27;all x.(((ClinicalStaff(x)) &amp; (not HIPAACert(x))) -&gt; (not Credentialed(x)))&#x27;, &#x27;all x.((AdministrativeStaff(x)) -&gt; (not DirectCare(x)))&#x27;, &#x27;all x.((RegisteredNurse(x)) -&gt; (DirectCare(x)))&#x27;, &#x27;((RegisteredNurse(Johnson)) &amp; (InfectionTraining(Johnson))) &amp; (not HIPAACert(Johnson))&#x27;]</pre>
     </div>
   </section>
 
 
   <section class="grid" style="margin-top:8px">
     <div class="card" style="grid-column:span 12">
-      <h2>ques_2 · Conclusion (fol_solver)</h2>
+      <h2>Credential Compliance · Conclusion (fol_solver)</h2>
       <pre>not Credentialed(Johnson)</pre>
     </div>
   </section>
@@ -588,14 +549,6 @@ html
   <div class="card" style="grid-column:span 12">
     <h2>Result Summary</h2>
     <div class="chip">
-      <span class="k">Clinical Trial Enrollment</span>
-      <span class="v pill ok">A</span>
-    </div>
-    <div class="chip">
-      <span class="k">Credential Compliance</span>
-      <span class="v pill ok">A</span>
-    </div>
-    <div class="chip">
       <span class="k">Discharge Clearance</span>
       <span class="v pill ok">A</span>
     </div>
@@ -604,43 +557,35 @@ html
 
 <section class="grid" style="margin-top:8px">
   <div class="card" style="grid-column:span 12">
-    <h2>Problem-Specific Visualization</h2>
-    <h3>Derivation Chain</h3>
+    <h2>Derivation Chain</h2>
     <table>
       <tr>
         <th>Facts</th>
-        <th>Rules Applied</th>
+        <th>Rules</th>
         <th>Conclusion</th>
       </tr>
       <tr>
-        <td class="mono small">stable_vitals(Margaret_Chen, True)</td>
-        <td class="mono small">stable_vitals($x, True) &rarr; vital_stability_criteria($x, True)</td>
-        <td class="mono small">vital_stability_criteria(Margaret_Chen, True)</td>
-      </tr>
-      <tr>
-        <td class="mono small">off_iv_antibiotics(Margaret_Chen, True)</td>
-        <td class="mono small">off_iv_antibiotics($x, True) &rarr; antibiotic_transition_criteria($x, True)</td>
-        <td class="mono small">antibiotic_transition_criteria(Margaret_Chen, True)</td>
-      </tr>
-      <tr>
-        <td class="mono small">vital_stability_criteria(Margaret_Chen, True) && antibiotic_transition_criteria(Margaret_Chen, True)</td>
-        <td class="mono small">vital_stability_criteria($x, True) && antibiotic_transition_criteria($x, True) &rarr; medically_stable($x, True)</td>
-        <td class="mono small">medically_stable(Margaret_Chen, True)</td>
-      </tr>
-      <tr>
-        <td class="mono small">self_care_activities(Margaret_Chen, True)</td>
-        <td class="mono small">self_care_activities($x, True) &rarr; functionally_independent($x, True)</td>
-        <td class="mono small">functionally_independent(Margaret_Chen, True)</td>
-      </tr>
-      <tr>
-        <td class="mono small">functionally_independent(Margaret_Chen, True) && discharge_teaching(Margaret_Chen, True)</td>
-        <td class="mono small">functionally_independent($x, True) && discharge_teaching($x, True) &rarr; discharge_education_requirements($x, True)</td>
-        <td class="mono small">discharge_education_requirements(Margaret_Chen, True)</td>
-      </tr>
-      <tr>
-        <td class="mono small">medically_stable(Margaret_Chen, True) && discharge_education_requirements(Margaret_Chen, True)</td>
-        <td class="mono small">medically_stable($x, True) && discharge_education_requirements($x, True) &rarr; cleared_for_discharge($x, True)</td>
-        <td class="mono small">cleared_for_discharge(Margaret_Chen, True)</td>
+        <td>
+          <ul>
+            <li>stable_vitals(Margaret_Chen, True)</li>
+            <li>self_care_ability(Margaret_Chen, True)</li>
+            <li>completed_discharge_teaching(Margaret_Chen, True)</li>
+            <li>new_symptoms(Margaret_Chen, False)</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>stable_vitals($x, True) → medically_stable($x, True)</li>
+            <li>self_care_ability($x, True) → functionally_independent($x, True)</li>
+            <li>medically_stable($x, True) && new_symptoms($x, False) → ready_for_discharge_evaluation($x, True)</li>
+            <li>functionally_independent($x, True) && completed_discharge_teaching($x, True) → cleared_for_discharge($x, True)</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>cleared_for_discharge(Margaret_Chen, True)</li>
+          </ul>
+        </td>
       </tr>
     </table>
   </div>
@@ -649,12 +594,28 @@ html
 <section class="grid" style="margin-top:8px">
   <div class="card" style="grid-column:span 12">
     <h2>Verification</h2>
-    <p>All constraints and rules were satisfied in the logical deduction process:</p>
-    <ul>
-      <li>Stable vital signs and off IV antibiotics led to medical stability.</li>
-      <li>Self-care activities and completed discharge teaching led to discharge education requirements.</li>
-      <li>Medical stability and discharge education requirements confirmed discharge clearance.</li>
-    </ul>
+    <table>
+      <tr>
+        <th>Condition</th>
+        <th>Status</th>
+      </tr>
+      <tr>
+        <td>Stable vital signs</td>
+        <td class="pill ok">Satisfied</td>
+      </tr>
+      <tr>
+        <td>Self-care ability</td>
+        <td class="pill ok">Satisfied</td>
+      </tr>
+      <tr>
+        <td>No new symptoms</td>
+        <td class="pill ok">Satisfied</td>
+      </tr>
+      <tr>
+        <td>Completed discharge teaching</td>
+        <td class="pill ok">Satisfied</td>
+      </tr>
+    </table>
   </div>
 </section>
 
@@ -662,58 +623,54 @@ html
   <div class="card" style="grid-column:span 12">
     <h2>Interpretation</h2>
     <div class="callout">
-      <p>The logical deduction process confirms that Margaret Chen meets all necessary criteria for discharge. The formal code ensures that each step in the reasoning chain is valid, leading to the conclusion that she is cleared for discharge.</p>
+      The logical deduction process confirms that Margaret Chen meets all the necessary conditions for discharge clearance. The formal code, which includes predicates and rules, systematically verifies each condition, ensuring a reliable conclusion.
     </div>
   </div>
 </section>
 
   <section class="grid" style="margin-top:8px">
     <div class="card" style="grid-column:span 12">
-      <h2>ques_3 · Formalization (lp_solver)</h2>
+      <h2>Discharge Clearance · Formalization (lp_solver)</h2>
       <pre>Predicates:
 stable_vitals($x, bool) ::: Does patient x have stable vital signs?
-off_iv_antibiotics($x, bool) ::: Is patient x off IV antibiotics?
-vital_stability_criteria($x, bool) ::: Does patient x meet vital stability criteria?
-antibiotic_transition_criteria($x, bool) ::: Does patient x meet antibiotic transition criteria?
 medically_stable($x, bool) ::: Is patient x medically stable?
-self_care_activities($x, bool) ::: Can patient x perform self-care activities?
+self_care_ability($x, bool) ::: Can patient x perform self-care activities?
 functionally_independent($x, bool) ::: Is patient x functionally independent?
-discharge_teaching($x, bool) ::: Has patient x completed discharge teaching?
-discharge_education_requirements($x, bool) ::: Does patient x meet discharge education requirements?
+new_symptoms($x, bool) ::: Does patient x have new symptoms?
+ready_for_discharge_evaluation($x, bool) ::: Is patient x ready for discharge evaluation?
+completed_discharge_teaching($x, bool) ::: Has patient x completed discharge teaching?
 cleared_for_discharge($x, bool) ::: Is patient x cleared for discharge?
 
 Facts:
 stable_vitals(Margaret_Chen, True) ::: Margaret Chen has stable vital signs.
-off_iv_antibiotics(Margaret_Chen, True) ::: Margaret Chen is off IV antibiotics.
-self_care_activities(Margaret_Chen, True) ::: Margaret Chen can perform self-care activities.
-discharge_teaching(Margaret_Chen, True) ::: Margaret Chen has completed discharge teaching.
+self_care_ability(Margaret_Chen, True) ::: Margaret Chen can perform self-care activities.
+completed_discharge_teaching(Margaret_Chen, True) ::: Margaret Chen has completed discharge teaching.
+new_symptoms(Margaret_Chen, False) ::: Margaret Chen has no new symptoms.
 
 Rules:
-stable_vitals($x, True) &gt;&gt;&gt; vital_stability_criteria($x, True) ::: If a patient has stable vital signs, then the patient meets vital stability criteria.
-off_iv_antibiotics($x, True) &gt;&gt;&gt; antibiotic_transition_criteria($x, True) ::: If a patient is off IV antibiotics, then the patient meets antibiotic transition criteria.
-vital_stability_criteria($x, True) &amp;&amp; antibiotic_transition_criteria($x, True) &gt;&gt;&gt; medically_stable($x, True) ::: If a patient meets vital stability criteria and meets antibiotic transition criteria, then the patient is medically stable.
-self_care_activities($x, True) &gt;&gt;&gt; functionally_independent($x, True) ::: If a patient can perform self-care activities, then the patient is functionally independent.
-functionally_independent($x, True) &amp;&amp; discharge_teaching($x, True) &gt;&gt;&gt; discharge_education_requirements($x, True) ::: If a patient is functionally independent and has completed discharge teaching, then the patient meets discharge education requirements.
-medically_stable($x, True) &amp;&amp; discharge_education_requirements($x, True) &gt;&gt;&gt; cleared_for_discharge($x, True) ::: If a patient is medically stable and meets discharge education requirements, then the patient is cleared for discharge.
+stable_vitals($x, True) &gt;&gt;&gt; medically_stable($x, True) ::: If a patient has stable vital signs, then the patient is medically stable.
+self_care_ability($x, True) &gt;&gt;&gt; functionally_independent($x, True) ::: If a patient can perform self-care activities, then the patient is functionally independent.
+medically_stable($x, True) &amp;&amp; new_symptoms($x, False) &gt;&gt;&gt; ready_for_discharge_evaluation($x, True) ::: If a patient is medically stable and has no new symptoms, then the patient is ready for discharge evaluation.
+functionally_independent($x, True) &amp;&amp; completed_discharge_teaching($x, True) &gt;&gt;&gt; cleared_for_discharge($x, True) ::: If a patient is functionally independent and has completed discharge teaching, then the patient is cleared for discharge.
 
 Query:
-cleared_for_discharge(Margaret_Chen, True) ::: Margaret Chen cleared for discharge?</pre>
+cleared_for_discharge(Margaret_Chen, True) ::: Margaret Chen is cleared for discharge.</pre>
     </div>
   </section>
 
 
   <section class="grid" style="margin-top:8px">
     <div class="card" style="grid-column:span 12">
-      <h2>ques_3 · Facts (lp_solver)</h2>
-      <pre>[&#x27;stable_vitals(Margaret_Chen, True)&#x27;, &#x27;off_iv_antibiotics(Margaret_Chen, True)&#x27;, &#x27;self_care_activities(Margaret_Chen, True)&#x27;, &#x27;discharge_teaching(Margaret_Chen, True)&#x27;]</pre>
+      <h2>Discharge Clearance · Facts (lp_solver)</h2>
+      <pre>[&#x27;stable_vitals(Margaret_Chen, True)&#x27;, &#x27;self_care_ability(Margaret_Chen, True)&#x27;, &#x27;completed_discharge_teaching(Margaret_Chen, True)&#x27;, &#x27;new_symptoms(Margaret_Chen, False)&#x27;]</pre>
     </div>
   </section>
 
 
   <section class="grid" style="margin-top:8px">
     <div class="card" style="grid-column:span 12">
-      <h2>ques_3 · Rules (lp_solver)</h2>
-      <pre>[&#x27;stable_vitals($x, True) &gt;&gt;&gt; vital_stability_criteria($x, True)&#x27;, &#x27;off_iv_antibiotics($x, True) &gt;&gt;&gt; antibiotic_transition_criteria($x, True)&#x27;, &#x27;vital_stability_criteria($x, True) &amp;&amp; antibiotic_transition_criteria($x, True) &gt;&gt;&gt; medically_stable($x, True)&#x27;, &#x27;self_care_activities($x, True) &gt;&gt;&gt; functionally_independent($x, True)&#x27;, &#x27;functionally_independent($x, True) &amp;&amp; discharge_teaching($x, True) &gt;&gt;&gt; discharge_education_requirements($x, True)&#x27;, &#x27;medically_stable($x, True) &amp;&amp; discharge_education_requirements($x, True) &gt;&gt;&gt; cleared_for_discharge($x, True)&#x27;]</pre>
+      <h2>Discharge Clearance · Rules (lp_solver)</h2>
+      <pre>[&#x27;stable_vitals($x, True) &gt;&gt;&gt; medically_stable($x, True)&#x27;, &#x27;self_care_ability($x, True) &gt;&gt;&gt; functionally_independent($x, True)&#x27;, &#x27;medically_stable($x, True) &amp;&amp; new_symptoms($x, False) &gt;&gt;&gt; ready_for_discharge_evaluation($x, True)&#x27;, &#x27;functionally_independent($x, True) &amp;&amp; completed_discharge_teaching($x, True) &gt;&gt;&gt; cleared_for_discharge($x, True)&#x27;]</pre>
     </div>
   </section>
 

@@ -10,69 +10,68 @@
 
 <style>
   :root{
-    --bg:#0b1220;
-    --panel:#111a2b;
-    --soft:#1a2438;
-    --ink:#e8eefc;
-    --sub:#9fb3d9;
-    --accent:#7cc4ff;
-    --accent-2:#b892ff;
-    --ok:#4ade80;
-    --warn:#facc15;
-    --bad:#fb7185;
-    --cv:#8b5cf6;
-    --nlp:#f59e0b;
-    --sys:#10b981;
-    --rl:#3b82f6;
-    --theory:#ec4899;
-    --code:#0f172a;
-    --chip:#233251;
+    --bg:#f7f9fc;
+    --panel:#ffffff;
+    --soft:#eef3fb;
+    --ink:#1f2a37;
+    --sub:#5f728d;
+    --accent:#2563eb;
+    --accent-2:#7c3aed;
+    --ok:#15803d;
+    --warn:#b45309;
+    --bad:#b91c1c;
+    --cv:#4c1d95;
+    --nlp:#92400e;
+    --sys:#065f46;
+    --rl:#1d4ed8;
+    --theory:#9d174d;
+    --code:#f1f5f9;
+    --chip:#e2e8f0;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;padding:0;background:linear-gradient(180deg,#0b1220 0%, #0a0f1c 60%, #0b1220 100%);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial,"Noto Sans",sans-serif;line-height:1.55}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial,"Noto Sans",sans-serif;line-height:1.55}
   a{color:var(--accent)}
-  .container{max-width:1200px;margin:32px auto;padding:0 20px}
-  header{display:flex;gap:16px;align-items:center;margin-bottom:24px}
-  .logo{width:46px;height:46px;border-radius:12px;background:radial-gradient(120% 120% at 20% 20%, #7cc4ff 0%, #b892ff 40%, #111a2b 100%);box-shadow:0 10px 30px rgba(124,196,255,.25), inset 0 0 14px rgba(184,146,255,.3)}
-  h1{font-size:30px;margin:0;font-weight:800;letter-spacing:.2px}
+  .container{max-width:1100px;margin:24px auto;padding:0 16px}
+  header{display:flex;gap:16px;align-items:center;margin-bottom:20px}
+  .logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#2563eb,#7c3aed);box-shadow:0 6px 18px rgba(37,99,235,.25)}
+  h1{font-size:28px;margin:0;font-weight:700;letter-spacing:.2px;color:var(--ink)}
   .subtitle{color:var(--sub);margin-top:2px;font-weight:500}
   .grid{display:grid;gap:16px;grid-template-columns:repeat(12,1fr)}
-  .card{grid-column:span 12;background:linear-gradient(180deg,var(--panel), #0f172a);border:1px solid rgba(124,196,255,.15);border-radius:16px;padding:18px 20px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
-  .card h2{margin:2px 0 10px 0;font-size:20px;letter-spacing:.2px}
-  .card h3{margin:16px 0 8px 0;font-size:16px;color:#cbd5e1}
+  .card{grid-column:span 12;background:var(--panel);border:1px solid #e4e7ec;border-radius:14px;padding:18px 20px;box-shadow:0 8px 24px rgba(15,23,42,.08)}
+  .card h2{margin:2px 0 10px 0;font-size:20px;color:var(--ink)}
+  .card h3{margin:16px 0 8px 0;font-size:15px;color:var(--sub)}
   .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
-  .chip{background:var(--chip);color:var(--ink);padding:6px 12px;border-radius:999px;border:1px solid rgba(124,196,255,.18);font-size:12px}
-  code, pre{background:var(--code);color:#dbeafe;border-radius:10px}
-  pre{padding:14px;overflow:auto;border:1px solid rgba(124,196,255,.18);font-size:12px}
-  table{width:100%;border-collapse:separate;border-spacing:0 6px}
-  th,td{text-align:left;padding:8px 10px;font-size:13px}
-  th{color:#cbd5e1;font-weight:700;border-bottom:1px solid rgba(124,196,255,.25)}
-  tr{background:rgba(26,36,56,.65)}
+  .chip{background:var(--chip);color:var(--ink);padding:6px 12px;border-radius:999px;border:1px solid #d5dae1;font-size:12px;font-weight:600}
+  code, pre{background:var(--code);color:#0f172a;border-radius:10px}
+  pre{padding:14px;overflow:auto;border:1px solid #d5dae1;font-size:12px}
+  table{width:100%;border-collapse:separate;border-spacing:0 6px;background:#fefefe;border:1px solid #e4e7ec;border-radius:12px}
+  th{color:#475467;font-weight:700;border-bottom:1px solid #e4e7ec;background:#f3f6fb;padding:10px 12px;font-size:13px}
+  td{text-align:left;padding:10px 12px;font-size:13px;color:#1f2a37;background:#ffffff}
   tr td:first-child{border-top-left-radius:10px;border-bottom-left-radius:10px}
   tr td:last-child{border-top-right-radius:10px;border-bottom-right-radius:10px}
   .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
-  .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;font-weight:700}
-  .pill.ok{background:rgba(34,197,94,.12);color:#bbf7d0;border:1px solid rgba(34,197,94,.35)}
-  .pill.warn{background:rgba(250,204,21,.12);color:#fde68a;border:1px solid rgba(250,204,21,.35)}
-  .session-box{background:rgba(26,36,56,.8);border:1px solid rgba(124,196,255,.2);border-radius:12px;padding:14px}
-  .session-box h4{margin:0 0 8px 0;font-size:15px;color:#cbd5e1;font-weight:700}
-  .paper-badge{display:inline-block;padding:4px 8px;margin:3px;border-radius:6px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,.12)}
-  .paper-badge.cv{background:rgba(139,92,246,.2);color:#c4b5fd}
-  .paper-badge.nlp{background:rgba(245,158,11,.2);color:#fcd34d}
-  .paper-badge.sys{background:rgba(16,185,129,.2);color:#6ee7b7}
-  .paper-badge.rl{background:rgba(59,130,246,.2);color:#93c5fd}
-  .paper-badge.theory{background:rgba(236,72,153,.2);color:#f9a8d4}
-  .oral-badge{background:rgba(124,196,255,.15);color:#7cc4ff;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:600;margin-left:8px}
-  .poster-badge{background:rgba(184,146,255,.15);color:#b892ff;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:600;margin-left:8px}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;font-weight:700;font-size:12px;border:1px solid transparent}
+  .pill.ok{background:rgba(21,128,61,.12);color:#166534;border-color:rgba(21,128,61,.4)}
+  .pill.warn{background:rgba(180,83,9,.12);color:#92400e;border-color:rgba(180,83,9,.35)}
+  .session-box{background:#f4f7fb;border:1px solid #e4e7ec;border-radius:12px;padding:14px}
+  .session-box h4{margin:0 0 8px 0;font-size:15px;color:#1f2a37;font-weight:600}
+  .paper-badge{display:inline-block;padding:4px 8px;margin:3px;border-radius:6px;font-size:11px;font-weight:600;border:1px solid #d5dae1;background:#eef2ff;color:#3730a3}
+  .paper-badge.cv{background:#ede9fe;color:#4c1d95}
+  .paper-badge.nlp{background:#fef3c7;color:#92400e}
+  .paper-badge.sys{background:#d1fae5;color:#065f46}
+  .paper-badge.rl{background:#e0f2fe;color:#1d4ed8}
+  .paper-badge.theory{background:#fce7f3;color:#9d174d}
+  .oral-badge{background:#dbeafe;color:#1d4ed8;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:600;margin-left:8px}
+  .poster-badge{background:#e9d5ff;color:#7c3aed;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:600;margin-left:8px}
   .plan-flow{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;padding:0}
-  .plan-flow li{list-style:none;background:rgba(255,255,255,.04);padding:6px 12px;border-radius:999px;border:1px solid rgba(124,196,255,.18);font-size:12px}
-  .dag-svg rect.module{fill:rgba(17,26,43,.95);stroke:rgba(124,196,255,.6);stroke-width:2.5}
-  .dag-svg text{font-family:Inter,sans-serif}
+  .plan-flow li{list-style:none;background:#eef2ff;padding:6px 12px;border-radius:999px;border:1px solid #dbe4ff;font-size:12px;color:#1e3a8a}
+  .dag-svg rect.module{fill:#ffffff;stroke:#2563eb;stroke-width:2.2;filter:drop-shadow(0 2px 6px rgba(15,23,42,.12))}
+  .dag-svg text{font-family:Inter,sans-serif;fill:#1f2a37;font-weight:600}
   .trace-table{width:100%;margin-top:10px}
   .trace-table tr td{font-size:12px}
   details{margin-top:8px}
   summary{cursor:pointer;font-weight:600;color:var(--accent)}
-  footer{margin:30px 0 12px 0;color:#8aa2c8;font-size:12px;text-align:center}
+  footer{margin:24px 0 12px 0;color:#64748b;font-size:12px;text-align:center}
   @media (max-width: 900px){ .grid{grid-template-columns:1fr} }
 </style>
 
@@ -162,13 +161,13 @@ Coverage requirement: All fifteen papers must be assigned, each to exactly one s
   <section class="grid" style="margin-top:8px">
     <div class="card" style="grid-column:span 12">
       <h2>Plan & DAG</h2>
-      <ul class="plan-flow"><li>&lt;PLAN_START&gt;</li><li>ques_1</li><li>csp_solver</li><li>&lt;PLAN_END&gt;</li></ul>
+      <ul class="plan-flow"><li>Stage 1: &lt;PLAN_START&gt;</li><li>Stage 2: ques_1</li><li>Stage 3: csp_solver</li><li>Stage 4: &lt;PLAN_END&gt;</li></ul>
       
       <div class="svg-wrap" style="margin-bottom:16px">
-        <svg class="dag-svg" viewBox='0 0 960 200' width='100%' height='100%' role='img' aria-label='Adaptive routing workflow'>
+        <svg class="dag-svg" viewBox='0 0 900 880' width='100%' height='100%' role='img' aria-label='Adaptive routing workflow'>
           <defs><marker id='arrow_0' markerWidth='12' markerHeight='12' refX='9' refY='4' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,8 L10,4 z' fill='#7cc4ff' /></marker><marker id='arrow_1' markerWidth='12' markerHeight='12' refX='9' refY='4' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,8 L10,4 z' fill='#b892ff' /></marker><marker id='arrow_2' markerWidth='12' markerHeight='12' refX='9' refY='4' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,8 L10,4 z' fill='#4ade80' /></marker><marker id='arrow_3' markerWidth='12' markerHeight='12' refX='9' refY='4' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,8 L10,4 z' fill='#facc15' /></marker></defs>
-          <line x1='252.0' y1='100.0' x2='324.0' y2='100.0' stroke='#7cc4ff' stroke-width='2.2' marker-end='url(#arrow_0)' /><line x1='444.0' y1='100.0' x2='516.0' y2='100.0' stroke='#b892ff' stroke-width='2.2' marker-end='url(#arrow_1)' /><line x1='636.0' y1='100.0' x2='708.0' y2='100.0' stroke='#4ade80' stroke-width='2.2' marker-end='url(#arrow_2)' />
-          <g class="dag-node"><rect class='module' x='132.0' y='64.0' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='#7cc4ff' stroke-width='2.5' /><text x='192.0' y='106.0' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>&lt;PLAN_START&gt;</text></g><g class="dag-node"><rect class='module' x='324.0' y='64.0' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='#b892ff' stroke-width='2.5' /><text x='384.0' y='106.0' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>ques_1</text></g><g class="dag-node"><rect class='module' x='516.0' y='64.0' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='#4ade80' stroke-width='2.5' /><text x='576.0' y='106.0' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>csp_solver</text></g><g class="dag-node"><rect class='module' x='708.0' y='64.0' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='#facc15' stroke-width='2.5' /><text x='768.0' y='106.0' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>&lt;PLAN_END&gt;</text></g>
+          <line x1='450.0' y1='212.0' x2='450.0' y2='316.0' stroke='#7cc4ff' stroke-width='2.2' marker-end='url(#arrow_0)' /><line x1='450.0' y1='388.0' x2='450.0' y2='492.0' stroke='#b892ff' stroke-width='2.2' marker-end='url(#arrow_1)' /><line x1='450.0' y1='564.0' x2='450.0' y2='668.0' stroke='#4ade80' stroke-width='2.2' marker-end='url(#arrow_2)' />
+          <g class="dag-node"><rect class='module' x='390.0' y='140.0' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='#7cc4ff' stroke-width='2.5' /><text x='450.0' y='182.0' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>&lt;PLAN_START&gt;</text></g><g class="dag-node"><rect class='module' x='390.0' y='316.0' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='#b892ff' stroke-width='2.5' /><text x='450.0' y='358.0' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>ques_1</text></g><g class="dag-node"><rect class='module' x='390.0' y='492.0' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='#4ade80' stroke-width='2.5' /><text x='450.0' y='534.0' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>csp_solver</text></g><g class="dag-node"><rect class='module' x='390.0' y='668.0' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='#facc15' stroke-width='2.5' /><text x='450.0' y='710.0' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>&lt;PLAN_END&gt;</text></g>
         </svg>
       </div>
     
@@ -184,8 +183,14 @@ html
 <section class="grid" style="margin-top:8px">
   <div class="card" style="grid-column:span 12">
     <h2>Result Summary</h2>
-    <div class="chip"><span class="k">Problem ID:</span> <span class="v">ques_1</span></div>
-    <div class="chip"><span class="k">Status:</span> <span class="pill ok">Solved</span></div>
+    <div class="pill ok">Solution Found</div>
+    <div class="pill ok">All Constraints Satisfied</div>
+  </div>
+</section>
+
+<section class="grid" style="margin-top:8px">
+  <div class="card" style="grid-column:span 12">
+    <h2>Conference Session Assignments</h2>
     <table>
       <thead>
         <tr>
@@ -216,8 +221,7 @@ html
 
 <section class="grid" style="margin-top:8px">
   <div class="card" style="grid-column:span 12">
-    <h2>Problem-Specific Visualization</h2>
-    <h3>Constraint Verification</h3>
+    <h2>Constraint Verification</h2>
     <table>
       <thead>
         <tr>
@@ -226,98 +230,20 @@ html
         </tr>
       </thead>
       <tbody>
-        <tr><td>Oral-talk Eligibility</td><td><span class="pill ok">Satisfied</span></td></tr>
-        <tr><td>Topic-match</td><td><span class="pill ok">Satisfied</span></td></tr>
-        <tr><td>Capacity</td><td><span class="pill ok">Satisfied</span></td></tr>
-        <tr><td>Author-session</td><td><span class="pill ok">Satisfied</span></td></tr>
-        <tr><td>Coverage Requirement</td><td><span class="pill ok">Satisfied</span></td></tr>
+        <tr><td>Oral-Talk Eligibility</td><td><div class="pill ok">Satisfied</div></td></tr>
+        <tr><td>Topic-Match</td><td><div class="pill ok">Satisfied</div></td></tr>
+        <tr><td>Capacity</td><td><div class="pill ok">Satisfied</div></td></tr>
+        <tr><td>Author-Session</td><td><div class="pill ok">Satisfied</div></td></tr>
+        <tr><td>Coverage Requirement</td><td><div class="pill ok">Satisfied</div></td></tr>
       </tbody>
     </table>
   </div>
 </section>
 
 <section class="grid" style="margin-top:8px">
-  <div class="card" style="grid-column:span 12">
-    <h2>Generated MiniZinc Code</h2>
-    <pre>
-include "globals.mzn";
-
-/* ENUMERATIONS */
-enum PAPER = {P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15};
-enum SUBJECT_AREA = {CV, NLP, Sys, RL, Theory};
-enum AUTHOR = {A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12};
-enum SESSION = {OM_A, OM_B, OA_A, OA_B, Poster_1, Poster_2};
-
-/* Paper Properties */
-array[PAPER] of SUBJECT_AREA: paper_area = [CV, CV, CV, NLP, NLP, Sys, RL, Theory, Theory, Sys, RL, Sys, NLP, Theory, CV];
-array[PAPER] of float: paper_score = [4.7, 4.5, 4.2, 4.8, 4.1, 4.3, 4.0, 3.8, 4.4, 3.9, 3.7, 4.0, 3.9, 4.6, 3.9];
-array[PAPER] of AUTHOR: paper_author = [A1, A2, A3, A4, A1, A5, A6, A7, A8, A3, A9, A10, A11, A12, A2];
-
-/* Session Properties */
-array[SESSION] of int: session_capacity = [2, 2, 2, 2, 4, 4];
-array[SESSION] of set of SUBJECT_AREA: session_whitelist = [
-  {CV},          % OM_A
-  {RL},          % OM_B
-  {NLP},         % OA_A
-  {Sys, Theory}, % OA_B
-  {CV, Sys, RL}, % Poster_1
-  {NLP, Theory}  % Poster_2
-];
-
-/* Session Format (Booleans for faster checking oral eligibility) */
-array[SESSION] of bool: is_oral = [true, true, true, true, false, false];
-
-/* Decision Variable: Assignment of papers to sessions */
-array[PAPER] of var SESSION: paper_session;
-
-/* Oral-talk Eligibility Rule */
-constraint forall(p in PAPER) (
-  is_oral[paper_session[p]] -> paper_score[p] >= 4.0
-);
-
-/* Topic-match Rule */
-constraint forall(p in PAPER) (
-  paper_area[p] in session_whitelist[paper_session[p]]
-);
-
-/* Capacity Rule */
-constraint forall(s in SESSION) (
-  count(p in PAPER)(paper_session[p] = s) <= session_capacity[s]
-);
-
-/* Author-session Rule */
-constraint forall(s in SESSION, a in AUTHOR) (
-  count(p in PAPER where paper_author[p] = a)(paper_session[p] = s) <= 1
-);
-
-/* Coverage Requirement */
-constraint forall(p in PAPER) (
-  paper_session[p] in SESSION
-);
-
-solve satisfy;
-    </pre>
-  </div>
-</section>
-
-<section class="grid" style="margin-top:8px">
-  <div class="card" style="grid-column:span 12">
-    <h2>Verification</h2>
-    <p>All constraints were verified and satisfied:</p>
-    <ul>
-      <li><strong>Oral-talk Eligibility:</strong> All papers in oral sessions have scores ≥ 4.0.</li>
-      <li><strong>Topic-match:</strong> Papers are assigned to sessions matching their subject areas.</li>
-      <li><strong>Capacity:</strong> No session exceeds its paper capacity.</li>
-      <li><strong>Author-session:</strong> No author presents more than one paper per session.</li>
-      <li><strong>Coverage Requirement:</strong> All papers are assigned to a session.</li>
-    </ul>
-  </div>
-</section>
-
-<section class="grid" style="margin-top:8px">
   <div class="card callout" style="grid-column:span 12">
     <h2>Interpretation</h2>
-    <p>The CSP solver successfully assigned all papers to sessions while adhering to all constraints. This ensures a balanced and feasible conference schedule, optimizing the use of available session slots and respecting the preferences and limitations set by the conference committee.</p>
+    <p>The solution assigns each paper to a session while respecting all constraints: oral sessions only include papers with scores ≥ 4.0, each paper matches the session's topic whitelist, no session exceeds its capacity, and no author presents more than one paper per session. The full MiniZinc code, which ensures these constraints, is available in a dedicated section.</p>
   </div>
 </section>
   <footer>Generated on-demand from the execution trace · Formal solvers provide the guarantees, interpretations may not.</footer>
