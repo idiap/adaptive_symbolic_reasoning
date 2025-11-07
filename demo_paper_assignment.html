@@ -184,46 +184,31 @@ html
 <section class="grid" style="margin-top:8px">
   <div class="card" style="grid-column:span 12">
     <h2>Result Summary</h2>
-    <div class="pill ok">Feasible Solution Found</div>
-    <div class="pill ok">All Papers Assigned</div>
-  </div>
-</section>
-
-<section class="grid" style="margin-top:8px">
-  <div class="card" style="grid-column:span 12">
-    <h2>Problem-Specific Visualization</h2>
+    <div class="chip"><span class="k">Problem ID:</span> <span class="v">ques_1</span></div>
+    <div class="chip"><span class="k">Status:</span> <span class="pill ok">Solved</span></div>
     <table>
       <thead>
         <tr>
-          <th>Session</th>
-          <th>Assigned Papers</th>
+          <th>Paper ID</th>
+          <th>Assigned Session</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>OM_A</td>
-          <td>P2, P3</td>
-        </tr>
-        <tr>
-          <td>OM_B</td>
-          <td>P7</td>
-        </tr>
-        <tr>
-          <td>OA_A</td>
-          <td>P4, P5</td>
-        </tr>
-        <tr>
-          <td>OA_B</td>
-          <td>P6, P12</td>
-        </tr>
-        <tr>
-          <td>Poster_1</td>
-          <td>P1, P10, P11, P15</td>
-        </tr>
-        <tr>
-          <td>Poster_2</td>
-          <td>P8, P9, P13, P14</td>
-        </tr>
+        <tr><td>P1</td><td>Poster_1</td></tr>
+        <tr><td>P2</td><td>OM_A</td></tr>
+        <tr><td>P3</td><td>OM_A</td></tr>
+        <tr><td>P4</td><td>OA_A</td></tr>
+        <tr><td>P5</td><td>OA_A</td></tr>
+        <tr><td>P6</td><td>OA_B</td></tr>
+        <tr><td>P7</td><td>OM_B</td></tr>
+        <tr><td>P8</td><td>Poster_2</td></tr>
+        <tr><td>P9</td><td>Poster_2</td></tr>
+        <tr><td>P10</td><td>Poster_1</td></tr>
+        <tr><td>P11</td><td>Poster_1</td></tr>
+        <tr><td>P12</td><td>OA_B</td></tr>
+        <tr><td>P13</td><td>Poster_2</td></tr>
+        <tr><td>P14</td><td>Poster_2</td></tr>
+        <tr><td>P15</td><td>Poster_1</td></tr>
       </tbody>
     </table>
   </div>
@@ -231,55 +216,83 @@ html
 
 <section class="grid" style="margin-top:8px">
   <div class="card" style="grid-column:span 12">
-    <h2>Generated Code</h2>
+    <h2>Problem-Specific Visualization</h2>
+    <h3>Constraint Verification</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Constraint</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Oral-talk Eligibility</td><td><span class="pill ok">Satisfied</span></td></tr>
+        <tr><td>Topic-match</td><td><span class="pill ok">Satisfied</span></td></tr>
+        <tr><td>Capacity</td><td><span class="pill ok">Satisfied</span></td></tr>
+        <tr><td>Author-session</td><td><span class="pill ok">Satisfied</span></td></tr>
+        <tr><td>Coverage Requirement</td><td><span class="pill ok">Satisfied</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="grid" style="margin-top:8px">
+  <div class="card" style="grid-column:span 12">
+    <h2>Generated MiniZinc Code</h2>
     <pre>
 include "globals.mzn";
 
 /* ENUMERATIONS */
 enum PAPER = {P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15};
-enum SESSION = {OM_A, OM_B, OA_A, OA_B, Poster_1, Poster_2};
-enum AREA = {CV, NLP, Sys, RL, Theory};
-enum FORMAT = {Oral, Poster};
+enum SUBJECT_AREA = {CV, NLP, Sys, RL, Theory};
 enum AUTHOR = {A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12};
+enum SESSION = {OM_A, OM_B, OA_A, OA_B, Poster_1, Poster_2};
 
-/* PAPER PROPERTIES */
-array[PAPER] of AREA: paper_area = [CV, CV, CV, NLP, NLP, Sys, RL, Theory, Theory, Sys, RL, Sys, NLP, Theory, CV];
+/* Paper Properties */
+array[PAPER] of SUBJECT_AREA: paper_area = [CV, CV, CV, NLP, NLP, Sys, RL, Theory, Theory, Sys, RL, Sys, NLP, Theory, CV];
 array[PAPER] of float: paper_score = [4.7, 4.5, 4.2, 4.8, 4.1, 4.3, 4.0, 3.8, 4.4, 3.9, 3.7, 4.0, 3.9, 4.6, 3.9];
 array[PAPER] of AUTHOR: paper_author = [A1, A2, A3, A4, A1, A5, A6, A7, A8, A3, A9, A10, A11, A12, A2];
 
-/* SESSION PROPERTIES */
-array[SESSION] of FORMAT: session_format = [Oral, Oral, Oral, Oral, Poster, Poster];
+/* Session Properties */
 array[SESSION] of int: session_capacity = [2, 2, 2, 2, 4, 4];
-array[SESSION] of set of AREA: session_whitelist = [{CV}, {RL}, {NLP}, {Sys, Theory}, {CV, Sys, RL}, {NLP, Theory}];
+array[SESSION] of set of SUBJECT_AREA: session_whitelist = [
+  {CV},          % OM_A
+  {RL},          % OM_B
+  {NLP},         % OA_A
+  {Sys, Theory}, % OA_B
+  {CV, Sys, RL}, % Poster_1
+  {NLP, Theory}  % Poster_2
+];
 
-/* Decision variable: paper session assignments */
+/* Session Format (Booleans for faster checking oral eligibility) */
+array[SESSION] of bool: is_oral = [true, true, true, true, false, false];
+
+/* Decision Variable: Assignment of papers to sessions */
 array[PAPER] of var SESSION: paper_session;
 
-/* Constraints */
-
-/* Coverage requirement */
-constraint forall(p in PAPER)(
-    paper_session[p] in SESSION
+/* Oral-talk Eligibility Rule */
+constraint forall(p in PAPER) (
+  is_oral[paper_session[p]] -> paper_score[p] >= 4.0
 );
 
-/* Oral-talk eligibility rule */
-constraint forall(p in PAPER)(
-    session_format[paper_session[p]] == Oral -> paper_score[p] >= 4.0
+/* Topic-match Rule */
+constraint forall(p in PAPER) (
+  paper_area[p] in session_whitelist[paper_session[p]]
 );
 
-/* Topic-match rule */
-constraint forall(p in PAPER)(
-    paper_area[p] in session_whitelist[paper_session[p]]
+/* Capacity Rule */
+constraint forall(s in SESSION) (
+  count(p in PAPER)(paper_session[p] = s) <= session_capacity[s]
 );
 
-/* Capacity rule */
-constraint forall(s in SESSION)(
-    sum([paper_session[p] == s | p in PAPER]) <= session_capacity[s]
+/* Author-session Rule */
+constraint forall(s in SESSION, a in AUTHOR) (
+  count(p in PAPER where paper_author[p] = a)(paper_session[p] = s) <= 1
 );
 
-/* Author-session rule */
-constraint forall(a in AUTHOR, s in SESSION)(
-    sum([paper_author[p] == a /\ paper_session[p] == s | p in PAPER]) <= 1
+/* Coverage Requirement */
+constraint forall(p in PAPER) (
+  paper_session[p] in SESSION
 );
 
 solve satisfy;
@@ -290,22 +303,21 @@ solve satisfy;
 <section class="grid" style="margin-top:8px">
   <div class="card" style="grid-column:span 12">
     <h2>Verification</h2>
+    <p>All constraints were verified and satisfied:</p>
     <ul>
-      <li>Coverage Requirement: All papers assigned to sessions.</li>
-      <li>Oral-talk Eligibility: Papers in oral sessions have scores ≥ 4.0.</li>
-      <li>Topic-match Rule: Papers assigned to sessions with matching topics.</li>
-      <li>Capacity Rule: No session exceeds its paper capacity.</li>
-      <li>Author-session Rule: No author presents more than one paper per session.</li>
+      <li><strong>Oral-talk Eligibility:</strong> All papers in oral sessions have scores ≥ 4.0.</li>
+      <li><strong>Topic-match:</strong> Papers are assigned to sessions matching their subject areas.</li>
+      <li><strong>Capacity:</strong> No session exceeds its paper capacity.</li>
+      <li><strong>Author-session:</strong> No author presents more than one paper per session.</li>
+      <li><strong>Coverage Requirement:</strong> All papers are assigned to a session.</li>
     </ul>
   </div>
 </section>
 
 <section class="grid" style="margin-top:8px">
-  <div class="card" style="grid-column:span 12">
+  <div class="card callout" style="grid-column:span 12">
     <h2>Interpretation</h2>
-    <div class="callout">
-      The solution assigns each paper to a session while respecting all constraints. Oral sessions are reserved for high-scoring papers, ensuring quality presentations. Topic matching ensures relevant discussions, and capacity limits prevent overcrowding. Authors are scheduled to present in different sessions to avoid conflicts.
-    </div>
+    <p>The CSP solver successfully assigned all papers to sessions while adhering to all constraints. This ensures a balanced and feasible conference schedule, optimizing the use of available session slots and respecting the preferences and limitations set by the conference committee.</p>
   </div>
 </section>
   <footer>Generated on-demand from the execution trace · Formal solvers provide the guarantees, interpretations may not.</footer>

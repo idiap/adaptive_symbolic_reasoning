@@ -58,6 +58,186 @@ def snapshot_memory(memory) -> Dict[str, Any]:
     return snapshot
 
 
+MAX_EVENTS_PER_PROBLEM = 12
+_TRACE_STRING_LIMIT = 1500
+FORMAL_VALUE_KEYS = {
+    "intermediate_form",
+    "formalization",
+    "formal_code",
+    "Facts",
+    "facts",
+    "Rules",
+    "rules",
+    "premises",
+    "conclusion",
+    "code",
+}
+FORMAL_VALUE_PLACEHOLDER = "[formal code omitted – added in static section]"
+FORMAL_KEY_TITLES = {
+    "intermediate_form": "Formalization",
+    "formalization": "Formalization",
+    "formal_code": "Formal Code",
+    "Facts": "Facts",
+    "facts": "Facts",
+    "Rules": "Rules",
+    "rules": "Rules",
+    "premises": "Premises",
+    "conclusion": "Conclusion",
+    "code": "Code",
+}
+
+
+def _event_contains_problem(event: Dict[str, Any], problem_id: str) -> bool:
+    if not problem_id or not isinstance(event, dict):
+        return False
+    try:
+        blob = json.dumps(event, ensure_ascii=False)
+    except TypeError:
+        return False
+    return problem_id in blob
+
+
+def _trim_event(event: Dict[str, Any]) -> Dict[str, Any]:
+    if not isinstance(event, dict):
+        return event
+    trimmed = dict(event)
+    for field in ("input", "output"):
+        value = trimmed.get(field)
+        if isinstance(value, dict):
+            trimmed[field] = _clean_mapping(value)
+        elif isinstance(value, str) and len(value) > _TRACE_STRING_LIMIT:
+            trimmed[field] = value[: _TRACE_STRING_LIMIT] + "..."
+    return trimmed
+
+
+def _clean_mapping(mapping: Dict[str, Any]) -> Dict[str, Any]:
+    cleaned: Dict[str, Any] = {}
+    for key, value in mapping.items():
+        if key in FORMAL_VALUE_KEYS and isinstance(value, str):
+            cleaned[key] = FORMAL_VALUE_PLACEHOLDER
+            continue
+        if isinstance(value, str) and len(value) > _TRACE_STRING_LIMIT:
+            cleaned[key] = value[: _TRACE_STRING_LIMIT] + "..."
+        else:
+            cleaned[key] = value
+    return cleaned
+
+
+def _select_trace_events(events: List[Dict[str, Any]], problem_id: str) -> List[Dict[str, Any]]:
+    if not events:
+        return []
+    matched: List[Dict[str, Any]] = []
+    for event in events:
+        if _event_contains_problem(event, problem_id):
+            matched.append(_trim_event(event))
+        if len(matched) >= MAX_EVENTS_PER_PROBLEM:
+            break
+    if not matched:
+        return [_trim_event(event) for event in events[:MAX_EVENTS_PER_PROBLEM]]
+    return matched
+
+
+def _filter_memory_for_problem(memory_snapshot: Dict[str, Any], problem_id: str) -> Dict[str, Any]:
+    if not memory_snapshot:
+        return {}
+    if not problem_id:
+        return memory_snapshot
+    filtered = {k: v for k, v in memory_snapshot.items() if problem_id in k}
+    return filtered or {}
+
+
+def _build_problem_runs(structured: Dict[str, Any]) -> List[Dict[str, Any]]:
+    metadata = structured.get("metadata", {}) or {}
+    problem_ids = metadata.get("problem_ids") or []
+    result_summary = structured.get("result_summary", []) or []
+    summary_lookup = {
+        item.get("problem_id"): item
+        for item in result_summary
+        if isinstance(item, dict) and item.get("problem_id")
+    }
+    trace_events = structured.get("trace_events", []) or []
+    memory_snapshot = structured.get("memory", {}) or {}
+    task_titles = metadata.get("task_titles", {}) or {}
+    agent_problem_map = {
+        agent.get("name"): agent.get("problem_to_solve", []) or []
+        for agent in structured.get("plan_agents", []) or []
+    }
+    formalizations_by_problem = _gather_formalizations(trace_events, agent_problem_map)
+
+    runs: List[Dict[str, Any]] = []
+
+    if not problem_ids:
+        derived = sorted({pid for ids in agent_problem_map.values() for pid in ids if pid})
+        if derived:
+            problem_ids = derived
+
+    if not problem_ids:
+        fallback_id = next(iter(summary_lookup.keys()), next(iter(formalizations_by_problem.keys()), "task"))
+        fallback_summary = summary_lookup.get(fallback_id) or (result_summary[0] if result_summary else {})
+        runs.append(
+            {
+                "problem_id": fallback_id,
+                "label": task_titles.get(fallback_id) or fallback_summary.get("title") or fallback_id,
+                "result_entry": fallback_summary,
+                "trace_events": [_trim_event(event) for event in trace_events[:MAX_EVENTS_PER_PROBLEM]],
+                "memory_snapshot": memory_snapshot,
+                "formalizations": formalizations_by_problem.get(fallback_id, []),
+            }
+        )
+        return runs
+
+    for problem_id in problem_ids:
+        entry = summary_lookup.get(problem_id, {})
+        runs.append(
+            {
+                "problem_id": problem_id,
+                "label": task_titles.get(problem_id) or entry.get("title") or problem_id,
+                "result_entry": entry,
+                "trace_events": _select_trace_events(trace_events, problem_id),
+                "memory_snapshot": _filter_memory_for_problem(memory_snapshot, problem_id),
+                "formalizations": formalizations_by_problem.get(problem_id, []),
+            }
+        )
+
+    return runs
+
+
+def _gather_formalizations(trace_events: List[Dict[str, Any]], agent_problem_map: Dict[str, List[str]]) -> Dict[str, List[Dict[str, str]]]:
+    bucket: Dict[str, List[Dict[str, str]]] = defaultdict(list)
+    seen: Dict[str, set] = defaultdict(set)
+    for event in trace_events:
+        agent = event.get("agent")
+        if not agent:
+            continue
+        targets = agent_problem_map.get(agent) or []
+        if not targets:
+            continue
+        containers = []
+        for field in ("input", "output"):
+            payload = event.get(field)
+            if isinstance(payload, dict):
+                containers.append(payload)
+        for data in containers:
+            for key, title in FORMAL_KEY_TITLES.items():
+                snippet = data.get(key)
+                if not isinstance(snippet, str) or not snippet.strip():
+                    continue
+                snippet = snippet.strip()
+                for problem_id in targets:
+                    dedup_key = (problem_id, key, agent, snippet)
+                    if dedup_key in seen[problem_id]:
+                        continue
+                    seen[problem_id].add(dedup_key)
+                    bucket[problem_id].append(
+                        {
+                            "agent": agent,
+                            "title": f"{title} ({agent})" if agent else title,
+                            "code": snippet,
+                        }
+                    )
+    return bucket
+
+
 def build_trace_payload(
     plan: Optional[Plan],
     tracer: Optional[TracePersister],
@@ -167,6 +347,19 @@ def _summarise_text(value: Any, limit: int = 160) -> str:
     return (text[: limit].rstrip() + ("…" if len(text) > limit else ""))
 
 
+def _normalise_model_html(content: Optional[str]) -> str:
+    if not content:
+        return ""
+    html_content = content.strip()
+    if html_content.startswith("```html"):
+        html_content = html_content[7:]
+    if html_content.startswith("```"):
+        html_content = html_content[3:]
+    if html_content.endswith("```"):
+        html_content = html_content[:-3]
+    return html_content.strip()
+
+
 def _generate_commentary(
     generator,
     structured: Dict[str, Any],
@@ -179,48 +372,62 @@ def _generate_commentary(
     Generate problem-specific HTML sections using LLM.
     Returns dict with 'html_sections' containing complete HTML.
     """
-    # Prepare data for LLM (include everything that might be useful)
-    context_blob = {
+    scenario_context = {
         "scenario": structured.get("scenario"),
         "problem_statement": structured.get("problem_statement"),
-        "counts": structured.get("counts"),
         "plan_agents": structured.get("plan_agents"),
         "plan_edges": structured.get("plan_edges"),
-        "result_entries": structured.get("result_entries"),
-        "trace_events": structured.get("trace_events"),
-        "memory_snapshot": structured.get("memory", {}),
+        "solver_names": structured.get("solver_names"),
+        "result_summary": structured.get("result_summary"),
+        "trace_highlights": structured.get("trace_highlights"),
     }
+    scenario_blob = json.dumps(scenario_context, ensure_ascii=False, indent=2)
 
-    replacements = {
-        "context": json.dumps(context_blob, ensure_ascii=False, indent=2),
+    problem_runs = _build_problem_runs(structured)
+    replacements_base = {
         "narrative_context": narrative_context.strip(),
         "style_hint": (style_hint or "").strip(),
         "extra_guidance": (extra_guidance or "").strip(),
+        "scenario_context": scenario_blob,
     }
 
     commentary_args = dict(model_args or {})
     commentary_args.setdefault("temperature", 0.2)
-    # Remove json_object format - we want HTML
     commentary_args.pop("response_format", None)
 
-    response = generator.generate(
-        model_prompt_dir="helpers",
-        prompt_name="trace_visualization.txt",  # Use sections-only prompt
-        model_args=commentary_args,
-        **replacements,
-    )
+    html_sections: List[str] = []
+    for run in problem_runs:
+        context_blob = {
+            "problem_id": run.get("problem_id"),
+            "problem_label": run.get("label"),
+            "result_entry": run.get("result_entry"),
+            "trace_events": run.get("trace_events"),
+            "memory_snapshot": run.get("memory_snapshot"),
+            "plan_agents": structured.get("plan_agents"),
+            "plan_edges": structured.get("plan_edges"),
+        }
+        replacements = dict(replacements_base)
+        replacements.update(
+            {
+                "context": json.dumps(context_blob, ensure_ascii=False, indent=2),
+                "problem_id": run.get("problem_id", ""),
+                "problem_label": run.get("label", ""),
+            }
+        )
 
-    # Clean up markdown wrappers if LLM added them
-    html_content = response.strip()
-    if html_content.startswith("```html"):
-        html_content = html_content[7:]
-    if html_content.startswith("```"):
-        html_content = html_content[3:]
-    if html_content.endswith("```"):
-        html_content = html_content[:-3]
-    html_content = html_content.strip()
+        response = generator.generate(
+            model_prompt_dir="helpers",
+            prompt_name="trace_visualization.txt",
+            model_args=commentary_args,
+            **replacements,
+        )
+        html_content = _normalise_model_html(response)
+        formal_section = _render_formalization_sections(run.get("label"), run.get("formalizations"))
+        combined = "\n".join(part for part in (html_content, formal_section) if part)
+        if combined:
+            html_sections.append(combined)
 
-    return {"html_sections": html_content}
+    return {"html_sections": "\n".join(html_sections)}
 
 
 def _render_html(structured: Dict[str, Any], commentary: Dict[str, List[str]]) -> str:
@@ -425,14 +632,16 @@ def _render_plan_block(structured: Dict[str, Any]) -> str:
     edges = structured.get("plan_edges", [])
     if not agents and not edges:
         return ""
+    layer_map, ordered_layers = _compute_plan_layers(agents, edges)
     flow_items = []
-    for agent in agents:
-        flow_items.append(f"<li>{escape(agent.get('name', ''))}</li>")
+    for idx, layer in enumerate(ordered_layers, start=1):
+        label = ", ".join(escape(name) for name in layer)
+        flow_items.append(f"<li>Stage {idx}: {label}</li>")
     edge_list = "<br>".join(escape(edge) for edge in edges)
     agent_rows = "".join(
         f"<tr><td>{escape(agent.get('name',''))}</td><td>{escape(agent.get('goal',''))}</td></tr>" for agent in agents
     )
-    svg = _render_plan_svg(agents, edges)
+    svg = _render_plan_svg(agents, edges, layer_map, ordered_layers)
     return f"""
   <section class=\"grid\" style=\"margin-top:8px\">
     <div class=\"card\" style=\"grid-column:span 12\">
@@ -449,13 +658,79 @@ def _render_plan_block(structured: Dict[str, Any]) -> str:
 """
 
 
-def _render_plan_svg(agents: List[Dict[str, Any]], edges: List[str]) -> str:
+def _compute_plan_layers(agents: List[Dict[str, Any]], edges: List[str]):
+    names = [agent.get("name") for agent in agents if agent.get("name")]
+    if not names:
+        return {}, [names]
+    index_lookup = {name: idx for idx, name in enumerate(names)}
+    parents: Dict[str, set] = defaultdict(set)
+    children: Dict[str, set] = defaultdict(set)
+    indegree: Dict[str, int] = defaultdict(int)
+    for name in names:
+        indegree.setdefault(name, 0)
+    for edge in edges:
+        if "->" not in edge:
+            continue
+        source, target = edge.split("->", 1)
+        children[source].add(target)
+        parents[target].add(source)
+        indegree[target] += 1
+        indegree.setdefault(source, indegree.get(source, 0))
+    indegree_copy = indegree.copy()
+    from collections import deque
+
+    def _sorted_queue(items):
+        return deque(sorted(items, key=lambda n: index_lookup.get(n, len(names))))
+
+    queue = _sorted_queue([node for node, deg in indegree_copy.items() if deg == 0])
+    topo_order: List[str] = []
+    while queue:
+        node = queue.popleft()
+        topo_order.append(node)
+        for child in children.get(node, []):
+            indegree_copy[child] -= 1
+            if indegree_copy[child] == 0:
+                queue.append(child)
+        queue = _sorted_queue(queue)
+    for name in names:
+        if name not in topo_order:
+            topo_order.append(name)
+            parents.setdefault(name, set())
+
+    layer: Dict[str, int] = {}
+    for node in topo_order:
+        parent_layers = [layer.get(parent, 0) for parent in parents.get(node, [])]
+        layer[node] = (max(parent_layers) + 1) if parent_layers else 0
+
+    ordered_layers: List[List[str]] = []
+    seen_layers = sorted(set(layer.values())) if layer else [0]
+    for lvl in seen_layers:
+        nodes = [name for name in names if layer.get(name, 0) == lvl]
+        if nodes:
+            ordered_layers.append(nodes)
+    if not ordered_layers and names:
+        ordered_layers.append(names)
+    return layer, ordered_layers
+
+
+def _render_plan_svg(
+    agents: List[Dict[str, Any]],
+    edges: List[str],
+    layer_map: Optional[Dict[str, int]] = None,
+    ordered_layers: Optional[List[List[str]]] = None,
+) -> str:
     if not agents:
         return ""
-    count = len(agents)
-    width = max(900, 240 * count)
-    height = 200
-    step = width / (count + 1)
+    names = [agent.get("name") for agent in agents if agent.get("name")]
+    if not names:
+        return ""
+    if layer_map is None or ordered_layers is None:
+        layer_map, ordered_layers = _compute_plan_layers(agents, edges)
+    max_layer_width = max((len(layer) for layer in ordered_layers), default=1)
+    layer_count = max(len(ordered_layers), 1)
+    width = max(900, 240 * max_layer_width)
+    height = max(320, 220 * layer_count)
+    vertical_step = height / (layer_count + 1)
     node_positions = {}
     node_colors = {}
     nodes_svg = []
@@ -463,26 +738,29 @@ def _render_plan_svg(agents: List[Dict[str, Any]], edges: List[str]) -> str:
         "#7cc4ff", "#b892ff", "#4ade80", "#facc15", "#fb7185",
         "#38bdf8", "#f472b6", "#a3e635", "#f97316", "#c084fc"
     ]
-    for idx, agent in enumerate(agents, start=1):
-        x = step * idx
-        y = height / 2
-        node_positions[agent.get("name")] = (x, y)
-        fill = colors[(idx - 1) % len(colors)]
-        node_colors[agent.get("name")] = fill
-        nodes_svg.append(
-            f"<g class=\"dag-node\">"
-            f"<rect class='module' x='{x - 60}' y='{y - 36}' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='{fill}' stroke-width='2.5' />"
-            f"<text x='{x}' y='{y + 6}' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>{escape(agent.get('name',''))}</text>"
-            f"</g>"
-        )
+    color_lookup = {name: idx for idx, name in enumerate(names)}
+    for layer_idx, layer in enumerate(ordered_layers):
+        horizontal_step = width / (len(layer) + 1)
+        y = vertical_step * (layer_idx + 1)
+        for pos, name in enumerate(layer, start=1):
+            x = horizontal_step * pos
+            node_positions[name] = (x, y)
+            color = colors[color_lookup.get(name, 0) % len(colors)]
+            node_colors[name] = color
+            nodes_svg.append(
+                f"<g class=\"dag-node\">"
+                f"<rect class='module' x='{x - 60}' y='{y - 36}' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='{color}' stroke-width='2.5' />"
+                f"<text x='{x}' y='{y + 6}' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>{escape(name)}</text>"
+                f"</g>"
+            )
 
     edges_svg = []
     half_w, half_h = 60, 36
     marker_lookup = {color: f"arrow_{idx}" for idx, color in enumerate(dict.fromkeys(node_colors.values()))}
-    for idx, edge in enumerate(edges, start=1):
-        if '->' not in edge:
+    for edge in edges:
+        if "->" not in edge:
             continue
-        source, target = edge.split('->', 1)
+        source, target = edge.split("->", 1)
         if source not in node_positions or target not in node_positions:
             continue
         x1, y1 = node_positions[source]
@@ -555,6 +833,30 @@ def _render_commentary_block(commentary: Dict[str, List[str]]) -> str:
     </div>
   </section>
 """
+
+
+def _render_formalization_sections(problem_label: str | None, snippets: Optional[List[Dict[str, str]]]) -> str:
+    if not snippets:
+        return ""
+    label = problem_label or "Task"
+    sections: List[str] = []
+    for snippet in snippets:
+        title = snippet.get("title") or "Formalization"
+        code = snippet.get("code", "").strip()
+        if not code:
+            continue
+        header = f"{label} · {title}"
+        sections.append(
+            f"""
+  <section class=\"grid\" style=\"margin-top:8px\">
+    <div class=\"card\" style=\"grid-column:span 12\">
+      <h2>{escape(header)}</h2>
+      <pre>{escape(code)}</pre>
+    </div>
+  </section>
+"""
+        )
+    return "\n".join(sections)
 
 
 def why(

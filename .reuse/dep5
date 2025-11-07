@@ -23,6 +23,11 @@ Files: *.ipynb
 Copyright: 2025 Idiap Research Institute <contact@idiap.ch>
 License: GPL-3.0-only
 
+# HTML files
+Files: *.html
+Copyright: 2025 Idiap Research Institute <contact@idiap.ch>
+License: GPL-3.0-only
+
 # Prompt text files
 Files: prompt/prompts/**/*.txt
 Copyright: 2025 Idiap Research Institute <contact@idiap.ch>

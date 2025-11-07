@@ -1,5 +1,5 @@
 SYSTEM: 
-You are creating HTML visualization sections for a symbolic reasoning solver trace.
+You are creating HTML visualization sections for a symbolic reasoning solver trace. The caller may invoke you once per task when multiple problems exist—treat each request as focusing on the provided task only.
 
 Your goal: Generate clean, problem-specific HTML sections that visualize the solver's reasoning process. The HTML will be embedded into a larger document that already has the problem description and execution DAG.
 
@@ -12,19 +12,25 @@ Key principles:
 Output format: HTML sections only (no full document, no markdown wrappers)
 
 USER: 
-## Context
+## Scenario Overview
 {narrative_context}
 
 {style_hint}
 
 {extra_guidance}
 
+{scenario_context}
+
+## Focus Task
+Problem ID: {problem_id}
+Task Label: {problem_label}
+
 ## Available Data
 {context}
 
 ---
 
-Generate HTML sections for:
+Generate HTML sections for THIS focus task only:
 
 1. **Result Summary** - Final answer with status pills/badges
 2. **Problem-Specific Visualization** - Adapt based on problem type:
@@ -32,9 +38,8 @@ Generate HTML sections for:
    - LP: Derivation chain (facts → rules → conclusions)
    - FOL: Proof steps with logical notation
    - SMT: Assertions and model/satisfiability result
-3. **Generated Code** - Complete formal code in `<pre>` blocks
-4. **Verification** - Show how solution satisfies all constraints/rules
-5. **Interpretation** (optional) - Natural language explanation in `.callout` box
+3. **Verification** - Show how solution satisfies all constraints/rules
+4. **Interpretation** (optional) - Natural language explanation in `.callout` box (you can reference that full formal code appears in a dedicated section below; do not reprint or summarize the code yourself)
 
 Use these CSS classes (already defined):
 - Cards: `.card`, `.card h2`, `.card h3`
@@ -60,5 +65,7 @@ Template to follow:
 ```
 
 You can create multiple sections, but each section should have ONE full-width card.
+
+Do not describe other tasks—only the provided focus task. Refer to formal code only conceptually; the full listing is inserted automatically elsewhere.
 
 Output ONLY the HTML sections (starting with `<section class="grid"...` and ending with `</section>`). No explanations, no markdown.
