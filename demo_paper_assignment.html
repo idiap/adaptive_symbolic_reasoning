@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conference scheduling CSP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#0b1220;
+    --panel:#111a2b;
+    --soft:#1a2438;
+    --ink:#e8eefc;
+    --sub:#9fb3d9;
+    --accent:#7cc4ff;
+    --accent-2:#b892ff;
+    --ok:#4ade80;
+    --warn:#facc15;
+    --bad:#fb7185;
+    --cv:#8b5cf6;
+    --nlp:#f59e0b;
+    --sys:#10b981;
+    --rl:#3b82f6;
+    --theory:#ec4899;
+    --code:#0f172a;
+    --chip:#233251;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:linear-gradient(180deg,#0b1220 0%, #0a0f1c 60%, #0b1220 100%);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial,"Noto Sans",sans-serif;line-height:1.55}
+  a{color:var(--accent)}
+  .container{max-width:1200px;margin:32px auto;padding:0 20px}
+  header{display:flex;gap:16px;align-items:center;margin-bottom:24px}
+  .logo{width:46px;height:46px;border-radius:12px;background:radial-gradient(120% 120% at 20% 20%, #7cc4ff 0%, #b892ff 40%, #111a2b 100%);box-shadow:0 10px 30px rgba(124,196,255,.25), inset 0 0 14px rgba(184,146,255,.3)}
+  h1{font-size:30px;margin:0;font-weight:800;letter-spacing:.2px}
+  .subtitle{color:var(--sub);margin-top:2px;font-weight:500}
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(12,1fr)}
+  .card{grid-column:span 12;background:linear-gradient(180deg,var(--panel), #0f172a);border:1px solid rgba(124,196,255,.15);border-radius:16px;padding:18px 20px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .card h2{margin:2px 0 10px 0;font-size:20px;letter-spacing:.2px}
+  .card h3{margin:16px 0 8px 0;font-size:16px;color:#cbd5e1}
+  .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+  .chip{background:var(--chip);color:var(--ink);padding:6px 12px;border-radius:999px;border:1px solid rgba(124,196,255,.18);font-size:12px}
+  code, pre{background:var(--code);color:#dbeafe;border-radius:10px}
+  pre{padding:14px;overflow:auto;border:1px solid rgba(124,196,255,.18);font-size:12px}
+  table{width:100%;border-collapse:separate;border-spacing:0 6px}
+  th,td{text-align:left;padding:8px 10px;font-size:13px}
+  th{color:#cbd5e1;font-weight:700;border-bottom:1px solid rgba(124,196,255,.25)}
+  tr{background:rgba(26,36,56,.65)}
+  tr td:first-child{border-top-left-radius:10px;border-bottom-left-radius:10px}
+  tr td:last-child{border-top-right-radius:10px;border-bottom-right-radius:10px}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;font-weight:700}
+  .pill.ok{background:rgba(34,197,94,.12);color:#bbf7d0;border:1px solid rgba(34,197,94,.35)}
+  .pill.warn{background:rgba(250,204,21,.12);color:#fde68a;border:1px solid rgba(250,204,21,.35)}
+  .session-box{background:rgba(26,36,56,.8);border:1px solid rgba(124,196,255,.2);border-radius:12px;padding:14px}
+  .session-box h4{margin:0 0 8px 0;font-size:15px;color:#cbd5e1;font-weight:700}
+  .paper-badge{display:inline-block;padding:4px 8px;margin:3px;border-radius:6px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,.12)}
+  .paper-badge.cv{background:rgba(139,92,246,.2);color:#c4b5fd}
+  .paper-badge.nlp{background:rgba(245,158,11,.2);color:#fcd34d}
+  .paper-badge.sys{background:rgba(16,185,129,.2);color:#6ee7b7}
+  .paper-badge.rl{background:rgba(59,130,246,.2);color:#93c5fd}
+  .paper-badge.theory{background:rgba(236,72,153,.2);color:#f9a8d4}
+  .oral-badge{background:rgba(124,196,255,.15);color:#7cc4ff;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:600;margin-left:8px}
+  .poster-badge{background:rgba(184,146,255,.15);color:#b892ff;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:600;margin-left:8px}
+  .plan-flow{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;padding:0}
+  .plan-flow li{list-style:none;background:rgba(255,255,255,.04);padding:6px 12px;border-radius:999px;border:1px solid rgba(124,196,255,.18);font-size:12px}
+  .dag-svg rect.module{fill:rgba(17,26,43,.95);stroke:rgba(124,196,255,.6);stroke-width:2.5}
+  .dag-svg text{font-family:Inter,sans-serif}
+  .trace-table{width:100%;margin-top:10px}
+  .trace-table tr td{font-size:12px}
+  details{margin-top:8px}
+  summary{cursor:pointer;font-weight:600;color:var(--accent)}
+  footer{margin:30px 0 12px 0;color:#8aa2c8;font-size:12px;text-align:center}
+  @media (max-width: 900px){ .grid{grid-template-columns:1fr} }
+</style>
+
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="logo" aria-hidden="true"></div>
+    <div>
+      <h1>Conference scheduling CSP</h1>
+      <div class="subtitle">Engine: <span class="mono">Adaptive Solver</span></div>
+    </div>
+  </header>
+
+
+  <section class="grid">
+    <div class="card" style="grid-column:span 12">
+      <h2>Scenario Overview & Results</h2>
+      <p class="small">Conference scheduling CSP</p>
+      <div class="meta">
+        
+        <span class="chip">Agents in plan: 4</span>
+        <span class="chip">Trace events: 4</span>
+      </div>
+      <h3 style="margin-top:16px">Results</h3>
+      <ul class="small" style="margin:0 0 0 18px">
+        <li><strong>ques_1:</strong> P1→Poster_1, P2→OM_A, P3→OM_A, P4→OA_A, P5→OA_A, P6→OA_B, P7→OM_B, P8→Poster_2, P9→Poster_2, P10→Poster_1, P11→Poster_1, P12→OA_B, P13→Poster_2, P14→Poster_2, P15→Poster_1</li>
+      </ul>
+    </div>
+  </section>
+
+
+  <section class="grid" style="margin-top:8px">
+    <div class="card" style="grid-column:span 12">
+      <h2>Original Problem Statement</h2>
+      <details open>
+        <summary>Show / hide</summary>
+        <pre>Accepted papers
+
+There are fifteen accepted papers. For each paper, we know the short ID, the subject area, the reviewer score (on a five-point scale), and the numeric ID of the presenting author.
+
+P1 has area Computer Vision (CV), score 4.7, and author A1
+P2 has area CV, score 4.5, author A2
+P3 has area CV, score 4.2, author A3
+P4 has area Natural-Language Processing (NLP), score 4.8, author A4
+P5 has area NLP, score 4.1, author A1 (same author as P1)
+P6 has area Systems (Sys), score 4.3, author A5
+P7 has area Reinforcement Learning (RL), score 4.0, author A6
+P8 has area Theory, score 3.8, author A7
+P9 has area Theory, score 4.4, author A8
+P10 has area Sys, score 3.9, author A3 (same author as P3)
+P11 has area RL, score 3.7, author A9
+P12 has area Sys, score 4.0, author A10
+P13 has area NLP, score 3.9, author A11
+P14 has area Theory, score 4.6, author A12
+P15 has area CV, score 3.9, author A2 (same author as P2)
+
+Conference sessions
+
+The committee has defined six sessions. Each session has three properties: a format (either oral or poster), a capacity (the maximum number of papers it can host), and a topic whitelist (the list of subject areas permitted in that session).
+
+Session OM-A is an oral session with a capacity of 2 papers. It allows only papers in CV.
+Session OM-B is an oral session with a capacity of 2 papers. It allows only papers in RL.
+Session OA-A is an oral session with a capacity of 2 papers. It allows only papers in NLP.
+Session OA-B is an oral session with a capacity of 2 papers. It allows papers in Systems and Theory.
+Session Poster-1 is a poster session with a capacity of 4 papers. It allows papers in CV, Systems, and RL.
+Session Poster-2 is a poster session with a capacity of 4 papers. It allows papers in NLP and Theory.
+
+Rules that every valid schedule must satisfy
+
+Oral-talk eligibility rule: A paper may be placed in an oral session only if its reviewer score is at least 4.0.
+
+Topic-match rule: A paper can only be assigned to a session if its subject area appears in the session’s topic whitelist.
+
+Capacity rule: A session cannot be assigned more papers than its capacity allows.
+
+Author-session rule: No author may present more than one paper in the same session.
+For example, if author A1 is scheduled to present paper P1 in session OM-A, then their other paper P5 must be placed in a different session, such as OA-A or Poster-2, but not also in OM-A.
+
+Coverage requirement: All fifteen papers must be assigned, each to exactly one session. Every assignment must satisfy all of the rules above.</pre>
+      </details>
+    </div>
+  </section>
+
+
+  <section class="grid" style="margin-top:8px">
+    <div class="card" style="grid-column:span 12">
+      <h2>Plan & DAG</h2>
+      <ul class="plan-flow"><li>&lt;PLAN_START&gt;</li><li>ques_1</li><li>csp_solver</li><li>&lt;PLAN_END&gt;</li></ul>
+      
+      <div class="svg-wrap" style="margin-bottom:16px">
+        <svg class="dag-svg" viewBox='0 0 960 200' width='100%' height='100%' role='img' aria-label='Adaptive routing workflow'>
+          <defs><marker id='arrow_0' markerWidth='12' markerHeight='12' refX='9' refY='4' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,8 L10,4 z' fill='#7cc4ff' /></marker><marker id='arrow_1' markerWidth='12' markerHeight='12' refX='9' refY='4' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,8 L10,4 z' fill='#b892ff' /></marker><marker id='arrow_2' markerWidth='12' markerHeight='12' refX='9' refY='4' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,8 L10,4 z' fill='#4ade80' /></marker><marker id='arrow_3' markerWidth='12' markerHeight='12' refX='9' refY='4' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,8 L10,4 z' fill='#facc15' /></marker></defs>
+          <line x1='252.0' y1='100.0' x2='324.0' y2='100.0' stroke='#7cc4ff' stroke-width='2.2' marker-end='url(#arrow_0)' /><line x1='444.0' y1='100.0' x2='516.0' y2='100.0' stroke='#b892ff' stroke-width='2.2' marker-end='url(#arrow_1)' /><line x1='636.0' y1='100.0' x2='708.0' y2='100.0' stroke='#4ade80' stroke-width='2.2' marker-end='url(#arrow_2)' />
+          <g class="dag-node"><rect class='module' x='132.0' y='64.0' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='#7cc4ff' stroke-width='2.5' /><text x='192.0' y='106.0' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>&lt;PLAN_START&gt;</text></g><g class="dag-node"><rect class='module' x='324.0' y='64.0' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='#b892ff' stroke-width='2.5' /><text x='384.0' y='106.0' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>ques_1</text></g><g class="dag-node"><rect class='module' x='516.0' y='64.0' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='#4ade80' stroke-width='2.5' /><text x='576.0' y='106.0' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>csp_solver</text></g><g class="dag-node"><rect class='module' x='708.0' y='64.0' width='120' height='72' rx='16' fill='rgba(17,26,43,.95)' stroke='#facc15' stroke-width='2.5' /><text x='768.0' y='106.0' text-anchor='middle' font-size='13' fill='#e2e8f0' font-weight='600'>&lt;PLAN_END&gt;</text></g>
+        </svg>
+      </div>
+    
+      <table>
+        <thead><tr><th>Agent</th><th>Goal</th></tr></thead>
+        <tbody><tr><td>&lt;PLAN_START&gt;</td><td>Special control marker, indicating the start of the whole working plan.</td></tr><tr><td>ques_1</td><td>Virtual agent representing ques_1</td></tr><tr><td>csp_solver</td><td>A solver tailored for constraint satisfaction problems (CSP) where the goal is to assign values to variables within finite domains such that all explicit or implicit constraints are satisfied. It focuses on configuration, scheduling, and allocation tasks.</td></tr><tr><td>&lt;PLAN_END&gt;</td><td>Special control marker, indicating the end of the whole working plan.</td></tr></tbody>
+      </table>
+      <div class="small" style="margin-top:8px">Edges: &lt;PLAN_START&gt;-&gt;ques_1<br>ques_1-&gt;csp_solver<br>csp_solver-&gt;&lt;PLAN_END&gt;</div>
+    </div>
+  </section>
+
+html
+<section class="grid" style="margin-top:8px">
+  <div class="card" style="grid-column:span 12">
+    <h2>Result Summary</h2>
+    <div class="pill ok">Feasible Solution Found</div>
+    <div class="pill ok">All Papers Assigned</div>
+  </div>
+</section>
+
+<section class="grid" style="margin-top:8px">
+  <div class="card" style="grid-column:span 12">
+    <h2>Problem-Specific Visualization</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Session</th>
+          <th>Assigned Papers</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>OM_A</td>
+          <td>P2, P3</td>
+        </tr>
+        <tr>
+          <td>OM_B</td>
+          <td>P7</td>
+        </tr>
+        <tr>
+          <td>OA_A</td>
+          <td>P4, P5</td>
+        </tr>
+        <tr>
+          <td>OA_B</td>
+          <td>P6, P12</td>
+        </tr>
+        <tr>
+          <td>Poster_1</td>
+          <td>P1, P10, P11, P15</td>
+        </tr>
+        <tr>
+          <td>Poster_2</td>
+          <td>P8, P9, P13, P14</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="grid" style="margin-top:8px">
+  <div class="card" style="grid-column:span 12">
+    <h2>Generated Code</h2>
+    <pre>
+include "globals.mzn";
+
+/* ENUMERATIONS */
+enum PAPER = {P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15};
+enum SESSION = {OM_A, OM_B, OA_A, OA_B, Poster_1, Poster_2};
+enum AREA = {CV, NLP, Sys, RL, Theory};
+enum FORMAT = {Oral, Poster};
+enum AUTHOR = {A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12};
+
+/* PAPER PROPERTIES */
+array[PAPER] of AREA: paper_area = [CV, CV, CV, NLP, NLP, Sys, RL, Theory, Theory, Sys, RL, Sys, NLP, Theory, CV];
+array[PAPER] of float: paper_score = [4.7, 4.5, 4.2, 4.8, 4.1, 4.3, 4.0, 3.8, 4.4, 3.9, 3.7, 4.0, 3.9, 4.6, 3.9];
+array[PAPER] of AUTHOR: paper_author = [A1, A2, A3, A4, A1, A5, A6, A7, A8, A3, A9, A10, A11, A12, A2];
+
+/* SESSION PROPERTIES */
+array[SESSION] of FORMAT: session_format = [Oral, Oral, Oral, Oral, Poster, Poster];
+array[SESSION] of int: session_capacity = [2, 2, 2, 2, 4, 4];
+array[SESSION] of set of AREA: session_whitelist = [{CV}, {RL}, {NLP}, {Sys, Theory}, {CV, Sys, RL}, {NLP, Theory}];
+
+/* Decision variable: paper session assignments */
+array[PAPER] of var SESSION: paper_session;
+
+/* Constraints */
+
+/* Coverage requirement */
+constraint forall(p in PAPER)(
+    paper_session[p] in SESSION
+);
+
+/* Oral-talk eligibility rule */
+constraint forall(p in PAPER)(
+    session_format[paper_session[p]] == Oral -> paper_score[p] >= 4.0
+);
+
+/* Topic-match rule */
+constraint forall(p in PAPER)(
+    paper_area[p] in session_whitelist[paper_session[p]]
+);
+
+/* Capacity rule */
+constraint forall(s in SESSION)(
+    sum([paper_session[p] == s | p in PAPER]) <= session_capacity[s]
+);
+
+/* Author-session rule */
+constraint forall(a in AUTHOR, s in SESSION)(
+    sum([paper_author[p] == a /\ paper_session[p] == s | p in PAPER]) <= 1
+);
+
+solve satisfy;
+    </pre>
+  </div>
+</section>
+
+<section class="grid" style="margin-top:8px">
+  <div class="card" style="grid-column:span 12">
+    <h2>Verification</h2>
+    <ul>
+      <li>Coverage Requirement: All papers assigned to sessions.</li>
+      <li>Oral-talk Eligibility: Papers in oral sessions have scores ≥ 4.0.</li>
+      <li>Topic-match Rule: Papers assigned to sessions with matching topics.</li>
+      <li>Capacity Rule: No session exceeds its paper capacity.</li>
+      <li>Author-session Rule: No author presents more than one paper per session.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="grid" style="margin-top:8px">
+  <div class="card" style="grid-column:span 12">
+    <h2>Interpretation</h2>
+    <div class="callout">
+      The solution assigns each paper to a session while respecting all constraints. Oral sessions are reserved for high-scoring papers, ensuring quality presentations. Topic matching ensures relevant discussions, and capacity limits prevent overcrowding. Authors are scheduled to present in different sessions to avoid conflicts.
+    </div>
+  </div>
+</section>
+  <footer>Generated on-demand from the execution trace · Formal solvers provide the guarantees, interpretations may not.</footer>
+</div>
+</body>
+</html>
